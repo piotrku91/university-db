@@ -64,6 +64,12 @@ void menu::searchAndShow(const long int &PeselNr)
     std::cout << std::endl;
 }
 
+void menu::deleteUser(const int &IndexNr)
+{
+    if (dbManager_.deleteByIndexNr(IndexNr)) {std::cout << "SUCCESS! Student removed from database.";} else {std::cout << "ERROR! Student for remove not found!";};
+    std::cout << "\n";
+}
+
 void menu::showStudent(const std::unique_ptr<Student> &person)
 {
     std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
@@ -71,8 +77,9 @@ void menu::showStudent(const std::unique_ptr<Student> &person)
 
 void menu::showDb()
 {
-    std::cout << "\n -----------------------------------------"
-              << "\n"
+    std::cout << "\n ----------------------------------------- \n"
+              << "     ORIGINAL VIEW OF STUDENTS DATABASE"
+              << "\n ----------------------------------------- \n"
               << "All records: " << dbManager_.getCount() << "\n\n";
     for (auto &person : dbManager_.getFullList())
     {
@@ -83,12 +90,29 @@ void menu::showDb()
 };
 
 
-void menu::showDbView()
+void menu::showDbView_Pesel(Order O)
 {
-    std::cout << "\n -----------------------------------------"
-              << "\n"
-              << "All records: " << dbManager_.getCount() << "\n\n";
-    for (auto &person : dbManager_.sortByPeselTemporary(Order::Desc))
+    std::cout << "\n ----------------------------------------- \n"
+              << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
+              << "\n ----------------------------------------- \n"
+              << "All records: " << dbManager_.getCount() <<
+              " | Sort by PESEL - " << getOrderString(O) << "\n\n";
+    for (auto &person : dbManager_.sortByPeselTemporary(O))
+    {
+        showStudent(*person);
+        std::cout << std::endl;
+    };
+    std::cout << std::endl;
+};
+
+void menu::showDbView_LastName(Order O)
+{
+    std::cout << "\n ----------------------------------------- \n"
+              << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
+              << "\n ----------------------------------------- \n"
+              << "All records: " << dbManager_.getCount() <<
+              " | Sort by last name - " << getOrderString(O) << "\n\n";
+    for (auto &person : dbManager_.sortByLastNameTemporary(O))
     {
         showStudent(*person);
         std::cout << std::endl;

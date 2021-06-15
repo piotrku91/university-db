@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
-
     switch (checkIdxAndPeselUnique(indexNr, peselNr))
     {
     case ErrorCheck::OK:
@@ -90,7 +89,6 @@ std::unique_ptr<Student> *db::findStudentByIdx_Binary(const long int &IdxNr)
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 bool db::deleteByIndexNr(const int &IdxNr)
 {
     auto it = (std::find_if(Students_.begin(), Students_.end(), [&IdxNr](std::unique_ptr<Student> &StudentPtr)
@@ -159,6 +157,27 @@ void db::sortByPesel(Order O)
                   return (O == Order::Asc) ? false : true;
               });
     rebuildIndex();
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<std::unique_ptr<Student> *> db::sortByLastNameTemporary(Order O)
+{
+    std::vector<std::unique_ptr<Student> *> tmpSortedList;
+
+    for (auto& OneStudent : Students_)
+    {
+        tmpSortedList.push_back(&OneStudent);
+    };
+
+  std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> * StudentPtr1, std::unique_ptr<Student> * StudentPtr2)
+              {
+                  if (std::lexicographical_compare(StudentPtr1->get()->getLastname().begin(), StudentPtr1->get()->getLastname().end(), StudentPtr2->get()->getLastname().begin(), StudentPtr2->get()->getLastname().end()))
+                  {
+                      return (O == Order::Asc) ? true : false;
+                  }
+                  return (O == Order::Asc) ? false : true;
+              });
+
+    return tmpSortedList;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
