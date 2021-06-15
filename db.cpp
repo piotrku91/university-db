@@ -161,6 +161,28 @@ void db::sortByPesel(Order O)
     rebuildIndex();
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
+{
+    std::vector<std::unique_ptr<Student> *> tmpSortedList;
+
+    if (O == Order::Asc)
+    {
+        for (auto it = IndexOfStudentPesels_.begin(); (it != IndexOfStudentPesels_.end()); ++it)
+        {
+            tmpSortedList.push_back(it->second);
+        };
+    }
+    else
+    {
+       for (auto it = IndexOfStudentPesels_.rbegin(); (it != IndexOfStudentPesels_.rend()); ++it)
+        {
+            tmpSortedList.push_back(it->second);
+        };
+    }
+
+    return tmpSortedList;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::rebuildIndex()
 {
     IndexOfStudentIdxs_.clear();

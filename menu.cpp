@@ -81,3 +81,17 @@ void menu::showDb()
     };
     std::cout << std::endl;
 };
+
+
+void menu::showDbView()
+{
+    std::cout << "\n -----------------------------------------"
+              << "\n"
+              << "All records: " << dbManager_.getCount() << "\n\n";
+    for (auto &person : dbManager_.sortByPeselTemporary(Order::Desc))
+    {
+        showStudent(*person);
+        std::cout << std::endl;
+    };
+    std::cout << std::endl;
+};

@@ -13,6 +13,7 @@ public:
     void searchAndShow(const long int &PeselNr);
     void showStudent(const std::unique_ptr<Student> &person);
     void showDb();
+    void showDbView();
 
     menu(db &dbManager) : dbManager_(dbManager){};
 };

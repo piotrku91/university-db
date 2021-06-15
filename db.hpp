@@ -35,6 +35,8 @@ public: // Setters / main operations
     bool peselValidator(const long int& PeselNr) {return true;}; // TO IMPLEMENT - for now pass everything
     void sortByLastName(Order O=Order::Asc);
     void sortByPesel(Order O=Order::Asc);
+    std::vector<std::unique_ptr<Student>*> sortByLastNameTemporary(Order O=Order::Asc);
+    std::vector<std::unique_ptr<Student>*> sortByPeselTemporary(Order O=Order::Asc);
     void rebuildIndex();
 
     // Getters

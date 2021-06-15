@@ -18,6 +18,7 @@ int main()
     std::cout << "deleted? " << std::boolalpha << dbManager.deleteByIndexNr(29121);
     mainMenu.showDb();
     mainMenu.searchAndShow(90010120190);
-    dbManager.sortByPesel(Order::Asc);
-    mainMenu.showDb();
+    //dbManager.sortByPesel(Order::Asc);
+    mainMenu.showDbView();
+
 };
