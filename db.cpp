@@ -1,6 +1,6 @@
 #include "db.hpp"
 #include <algorithm>
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
 
@@ -8,7 +8,8 @@ ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastN
     {
     case ErrorCheck::OK:
     {
-        Students.push_back(std::make_unique<Student>(Student{firstName, lastName, address, indexNr, peselNr, sexType}));
+        Students_.push_back(std::make_unique<Student>(Student{firstName, lastName, address, indexNr, peselNr, sexType}));
+        rebuildIndex();
         return ErrorCheck::OK;
         break;
     }
@@ -34,10 +35,10 @@ ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastN
     }
     };
 };
-
-std::unique_ptr<Student> &db::findStudentByLastName(const std::string &lastName)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<Student> &db::findStudentByLastName_Linear(const std::string &lastName)
 {
-    auto it = (std::find_if(Students.begin(), Students.end(), [&lastName](std::unique_ptr<Student> &StudentPtr)
+    auto it = (std::find_if(Students_.begin(), Students_.end(), [&lastName](std::unique_ptr<Student> &StudentPtr)
                             {
                                 if (StudentPtr->getLastname() == lastName)
                                 {
@@ -47,10 +48,10 @@ std::unique_ptr<Student> &db::findStudentByLastName(const std::string &lastName)
                             }));
     return *it;
 }
-
-std::unique_ptr<Student> &db::findStudentByPesel(const long int &PeselNr)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<Student> &db::findStudentByPesel_Linear(const long int &PeselNr)
 {
-    auto it = (std::find_if(Students.begin(), Students.end(), [&PeselNr](std::unique_ptr<Student> &StudentPtr)
+    auto it = (std::find_if(Students_.begin(), Students_.end(), [&PeselNr](std::unique_ptr<Student> &StudentPtr)
                             {
                                 if (StudentPtr->getPeselNr() == PeselNr)
                                 {
@@ -60,10 +61,39 @@ std::unique_ptr<Student> &db::findStudentByPesel(const long int &PeselNr)
                             }));
     return *it;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<Student> *db::findStudentByPesel_Binary(const long int &PeselNr)
+{
+    auto it = (IndexOfStudentPesels_.find(PeselNr));
+
+    if (it != IndexOfStudentPesels_.end())
+    {
+        return it->second;
+    }
+    else
+    {
+        return nullptr;
+    };
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<Student> *db::findStudentByIdx_Binary(const long int &IdxNr)
+{
+    auto it = (IndexOfStudentIdxs_.find(IdxNr));
+
+    if (it != IndexOfStudentIdxs_.end())
+    {
+        return it->second;
+    }
+    else
+    {
+        return nullptr;
+    };
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool db::deleteByIndexNr(const int &IdxNr)
 {
-    auto it = (std::find_if(Students.begin(), Students.end(), [&IdxNr](std::unique_ptr<Student> &StudentPtr)
+    auto it = (std::find_if(Students_.begin(), Students_.end(), [&IdxNr](std::unique_ptr<Student> &StudentPtr)
                             {
                                 if (StudentPtr->getIndexNr() == IdxNr)
                                 {
@@ -73,41 +103,41 @@ bool db::deleteByIndexNr(const int &IdxNr)
                             }));
     if (*it)
     {
-        Students.erase(it);
+        Students_.erase(it);
+        rebuildIndex();
         return true;
     };
     return false;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr)
 {
-    ErrorCheck results;
-    if (Students.empty())
+
+    if (Students_.empty())
     {
-        return results = ErrorCheck::OK;
+        return ErrorCheck::OK;
     };
-    auto it = (std::find_if(Students.begin(), Students.end(), [&IdxNr, &PeselNr, &results](std::unique_ptr<Student> &StudentPtr)
-                            {
-                                if (StudentPtr->getIndexNr() == IdxNr)
-                                {
-                                    results = ErrorCheck::IndexInUse;
-                                    return true;
-                                };
-                                if (StudentPtr->getPeselNr() == PeselNr)
-                                {
-                                    results = ErrorCheck::PeselInUse;
-                                    return true;
-                                };
-                                results = ErrorCheck::OK;
-                                return false;
-                            }));
 
-    return results;
+    if (!peselValidator(PeselNr))
+    {
+        return ErrorCheck::PeselInvalid;
+    }
+
+    if (findStudentByPesel_Binary(PeselNr))
+    {
+        return ErrorCheck::PeselInUse;
+    }
+
+    if (findStudentByIdx_Binary(IdxNr))
+    {
+        return ErrorCheck::IndexInUse;
+    }
+    return ErrorCheck::OK;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::sortByLastName(Order O)
 {
-    std::sort(Students.begin(), Students.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
+    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
               {
                   if (std::lexicographical_compare(StudentPtr1->getLastname().begin(), StudentPtr1->getLastname().end(), StudentPtr2->getLastname().begin(), StudentPtr2->getLastname().end()))
                   {
@@ -115,16 +145,32 @@ void db::sortByLastName(Order O)
                   }
                   return (O == Order::Asc) ? false : true;
               });
+    rebuildIndex();
 };
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::sortByPesel(Order O)
 {
-    std::sort(Students.begin(), Students.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
+    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
               {
-                  if (StudentPtr1->getPeselNr()<StudentPtr2->getPeselNr())
+                  if (StudentPtr1->getPeselNr() < StudentPtr2->getPeselNr())
                   {
                       return (O == Order::Asc) ? true : false;
                   }
                   return (O == Order::Asc) ? false : true;
               });
+    rebuildIndex();
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void db::rebuildIndex()
+{
+    IndexOfStudentIdxs_.clear();
+    IndexOfStudentPesels_.clear();
+    if (Students_.empty())
+        return;
+    for (auto &OneStudent : Students_)
+    {
+        IndexOfStudentIdxs_.insert({OneStudent->getIndexNr(), &OneStudent});
+        IndexOfStudentPesels_.insert({OneStudent->getPeselNr(), &OneStudent});
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

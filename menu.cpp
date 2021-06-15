@@ -34,7 +34,7 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
 
 void menu::searchAndShow(const std::string &lastName)
 {
-    auto &found = dbManager_.findStudentByLastName(lastName);
+    auto &found = dbManager_.findStudentByLastName_Linear(lastName);
 
     if (found)
     {
@@ -50,12 +50,12 @@ void menu::searchAndShow(const std::string &lastName)
 
 void menu::searchAndShow(const long int &PeselNr)
 {
-    auto &found = dbManager_.findStudentByPesel(PeselNr);
+    auto found = dbManager_.findStudentByPesel_Binary(PeselNr);
 
     if (found)
     {
         std::cout << "Student found by PESEL number! : ";
-        showStudent(found);
+        showStudent(*found);
     }
     else
     {
@@ -73,7 +73,7 @@ void menu::showDb()
 {
     std::cout << "\n -----------------------------------------"
               << "\n"
-              << "All records: " << dbManager_.getFullList().size() << "\n\n";
+              << "All records: " << dbManager_.getCount() << "\n\n";
     for (auto &person : dbManager_.getFullList())
     {
         showStudent(person);

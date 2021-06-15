@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -22,19 +23,25 @@ Desc
 class db
 {
 private:
-    std::vector<std::unique_ptr<Student>> Students;
-    std::unique_ptr<Student> &getStudent(size_t idx) { return Students[idx]; };
+    std::vector<std::unique_ptr<Student>> Students_;
+    std::map<int,std::unique_ptr<Student>*> IndexOfStudentIdxs_;
+    std::map<long int,std::unique_ptr<Student>*> IndexOfStudentPesels_;
+    std::unique_ptr<Student>& getStudent(std::unique_ptr<Student>* StudentPtr) { return *StudentPtr;};
 
 public: // Setters / main operations
     ErrorCheck addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType);
     ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const long int& PeselNr);
-    std::unique_ptr<Student>& findStudentByLastName(const std::string &lastName);
-    std::unique_ptr<Student>& findStudentByPesel(const long int &PeselNr);
     bool deleteByIndexNr(const int &IdxNr);
+    bool peselValidator(const long int& PeselNr) {return true;}; // TO IMPLEMENT - for now pass everything
     void sortByLastName(Order O=Order::Asc);
     void sortByPesel(Order O=Order::Asc);
+    void rebuildIndex();
 
     // Getters
-
-    const std::vector<std::unique_ptr<Student>> &getFullList() { return Students; };
+    std::unique_ptr<Student>& findStudentByLastName_Linear(const std::string &lastName);
+    std::unique_ptr<Student>& findStudentByPesel_Linear(const long int &PeselNr);
+    std::unique_ptr<Student>* findStudentByPesel_Binary(const long int &PeselNr);
+    std::unique_ptr<Student>* findStudentByIdx_Binary(const long int &IdxNr);
+    size_t getCount() const {return Students_.size();};
+    const std::vector<std::unique_ptr<Student>> &getFullList() const { return Students_; };
 };
