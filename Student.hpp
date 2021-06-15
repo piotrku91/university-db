@@ -23,7 +23,7 @@ public:
     std::string getLastname() const { return lastname_; };
     std::string getAddress() const { return address_; };
     int getIndexNr() const { return indexNr_; };
-    long int getpeselNr() const { return peselNr_; };
+    long int getPeselNr() const { return peselNr_; };
     Sex getSex() const { return sexType_; };
 
     std::string sexToString(Sex sexType) {return (sexType==Sex::Male)?"Male":"Female";};
