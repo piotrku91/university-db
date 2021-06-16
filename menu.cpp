@@ -1,5 +1,5 @@
 #include "menu.hpp"
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
     switch (dbManager_.addStudent(firstName, lastName, address, indexNr, peselNr, sexType))
@@ -31,15 +31,15 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
     }
     };
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::searchAndShow(const std::string &lastName)
 {
-    auto &found = dbManager_.findStudentByLastName_Linear(lastName);
+    auto found = dbManager_.findStudentByLastName_Linear(lastName);
 
     if (found)
     {
         std::cout << "Student found by lastname! : ";
-        showStudent(found);
+        showStudent(*found);
     }
     else
     {
@@ -47,7 +47,7 @@ void menu::searchAndShow(const std::string &lastName)
     };
     std::cout << std::endl;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::searchAndShow(const long int &PeselNr)
 {
     auto found = dbManager_.findStudentByPesel_Binary(PeselNr);
@@ -63,7 +63,7 @@ void menu::searchAndShow(const long int &PeselNr)
     };
     std::cout << std::endl;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::deleteUser(const int &IndexNr)
 {
     if (dbManager_.deleteByIndexNr(IndexNr)) {std::cout << "SUCCESS! Student removed from database.";} else {std::cout << "ERROR! Student for remove not found!";};
@@ -88,8 +88,7 @@ void menu::showDb()
     };
     std::cout << std::endl;
 };
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_Pesel(Order O)
 {
     std::cout << "\n ----------------------------------------- \n"
@@ -104,7 +103,7 @@ void menu::showDbView_Pesel(Order O)
     };
     std::cout << std::endl;
 };
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_LastName(Order O)
 {
     std::cout << "\n ----------------------------------------- \n"
@@ -119,3 +118,4 @@ void menu::showDbView_LastName(Order O)
     };
     std::cout << std::endl;
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

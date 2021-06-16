@@ -35,7 +35,7 @@ ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastN
     };
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> &db::findStudentByLastName_Linear(const std::string &lastName)
+std::unique_ptr<Student> *db::findStudentByLastName_Linear(const std::string &lastName)
 {
     auto it = (std::find_if(Students_.begin(), Students_.end(), [&lastName](std::unique_ptr<Student> &StudentPtr)
                             {
@@ -45,10 +45,17 @@ std::unique_ptr<Student> &db::findStudentByLastName_Linear(const std::string &la
                                 };
                                 return false;
                             }));
-    return *it;
+    if (it != Students_.end())
+    {
+        return &(*it);
+    }
+    else
+    {
+        return nullptr;
+    };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> &db::findStudentByPesel_Linear(const long int &PeselNr)
+std::unique_ptr<Student> *db::findStudentByPesel_Linear(const long int &PeselNr)
 {
     auto it = (std::find_if(Students_.begin(), Students_.end(), [&PeselNr](std::unique_ptr<Student> &StudentPtr)
                             {
@@ -58,7 +65,14 @@ std::unique_ptr<Student> &db::findStudentByPesel_Linear(const long int &PeselNr)
                                 };
                                 return false;
                             }));
-    return *it;
+    if (it != Students_.end())
+    {
+        return &(*it);
+    }
+    else
+    {
+        return nullptr;
+    };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::unique_ptr<Student> *db::findStudentByPesel_Binary(const long int &PeselNr)
@@ -91,6 +105,10 @@ std::unique_ptr<Student> *db::findStudentByIdx_Binary(const long int &IdxNr)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool db::deleteByIndexNr(const int &IdxNr)
 {
+    if (Students_.empty())
+    {
+        return false;
+    };
     auto it = (std::find_if(Students_.begin(), Students_.end(), [&IdxNr](std::unique_ptr<Student> &StudentPtr)
                             {
                                 if (StudentPtr->getIndexNr() == IdxNr)
@@ -163,12 +181,12 @@ std::vector<std::unique_ptr<Student> *> db::sortByLastNameTemporary(Order O)
 {
     std::vector<std::unique_ptr<Student> *> tmpSortedList;
 
-    for (auto& OneStudent : Students_)
+    for (auto &OneStudent : Students_)
     {
         tmpSortedList.push_back(&OneStudent);
     };
 
-  std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> * StudentPtr1, std::unique_ptr<Student> * StudentPtr2)
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> *StudentPtr1, std::unique_ptr<Student> *StudentPtr2)
               {
                   if (std::lexicographical_compare(StudentPtr1->get()->getLastname().begin(), StudentPtr1->get()->getLastname().end(), StudentPtr2->get()->getLastname().begin(), StudentPtr2->get()->getLastname().end()))
                   {
@@ -193,7 +211,7 @@ std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
     }
     else
     {
-       for (auto it = IndexOfStudentPesels_.rbegin(); (it != IndexOfStudentPesels_.rend()); ++it)
+        for (auto it = IndexOfStudentPesels_.rbegin(); (it != IndexOfStudentPesels_.rend()); ++it)
         {
             tmpSortedList.push_back(it->second);
         };
@@ -215,3 +233,94 @@ void db::rebuildIndex()
     }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool db::saveToFile(const std::string &filename)
+{
+    std::ofstream fileObject(filename, std::ios::out | std::ios::binary);
+    if (!fileObject)
+    {
+        return false;
+    };
+    // Save count of all records
+    size_t &&tmpSizeVar = std::move(getCount());
+    fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+    for (auto &OneStudent : Students_)
+    {
+        // Save string firstName_
+        tmpSizeVar = std::move(OneStudent->getFirstname().size());
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
+
+        // Save string lastName_
+        tmpSizeVar = std::move(OneStudent->getLastname().size());
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
+
+        // Save string address_
+        tmpSizeVar = std::move(OneStudent->getAddress().size());
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
+
+        // Save int indexNr_
+        int &&tmpSizeVar2 = std::move(OneStudent->getIndexNr());
+        fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
+
+        // Save long int indexNr_
+        long int &&tmpSizeVar3 = std::move(OneStudent->getPeselNr());
+        fileObject.write((char *)&tmpSizeVar3, sizeof(tmpSizeVar3));
+
+        // Save sex
+        tmpSizeVar2 = std::move(static_cast<int>(OneStudent->getSex()));
+        fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
+    }
+    fileObject.close();
+    return true;
+}
+
+bool db::loadFromFile(const std::string &filename)
+{
+    std::ifstream fileObject(filename, std::ios::out | std::ios::binary);
+    if (!fileObject)
+    {
+        return false;
+    };
+    size_t Counter;
+    size_t tmpSizeVar;
+
+    // Read counter
+    fileObject.read((char *)&Counter, sizeof(Counter));
+
+    for (size_t i = 0; i < Counter; i++)
+    {
+        // Read firstname_
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        fileObject.read(firstNameTmp.get(), tmpSizeVar);
+
+        // Read lastname_
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        fileObject.read(lastNameTmp.get(), tmpSizeVar);
+
+        // Read address_
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar + 1);
+        fileObject.read(addressTmp.get(), tmpSizeVar);
+
+        // Read indexNr_
+        int indexNr;
+        fileObject.read((char *)&indexNr, sizeof(indexNr));
+
+        // Read indexNr_
+        long int peselNr;
+        fileObject.read((char *)&peselNr, sizeof(peselNr));
+
+        // Read indexNr_
+        Sex sexTmp;
+        fileObject.read((char *)&sexTmp, sizeof(int));
+
+        // Add new student
+        addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
+    }
+    fileObject.close();
+    return true;
+}
