@@ -19,7 +19,7 @@ int main()
    mainMenu.showDb();
    mainMenu.searchAndShow("Torbisko");
    mainMenu.searchAndShow(90010120190);
-   mainMenu.deleteUser(29121);
+   mainMenu.deleteUser(10128);
    mainMenu.showDb();
    mainMenu.searchAndShow(90010120190);
    //dbManager.sortByPesel(Order::Asc);

@@ -109,17 +109,10 @@ bool db::deleteByIndexNr(const int &IdxNr)
     {
         return false;
     };
-    auto it = (std::find_if(Students_.begin(), Students_.end(), [&IdxNr](std::unique_ptr<Student> &StudentPtr)
-                            {
-                                if (StudentPtr->getIndexNr() == IdxNr)
-                                {
-                                    return true;
-                                };
-                                return false;
-                            }));
-    if (*it)
+    auto it = findStudentByIdx_Binary(IdxNr);
+    if (it)
     {
-        Students_.erase(it);
+        Students_.erase(std::remove(Students_.begin(),Students_.end(),*it),Students_.end());
         rebuildIndex();
         return true;
     };
