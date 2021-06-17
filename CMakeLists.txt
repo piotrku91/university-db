@@ -40,4 +40,7 @@ enable_testing()
 
 add_executable(${PROJECT_NAME} main.cpp db.cpp menu.cpp)
 
+add_executable(${PROJECT_NAME}-ut test.cpp db.cpp)
 
+target_link_libraries(${PROJECT_NAME}-ut gtest_main)
+add_test(NAME university-db_test COMMAND ${PROJECT_NAME}-ut)
