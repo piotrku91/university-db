@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include "db.hpp"
 
-db dbManager;
+db dbManager(false);
 
 TEST(MainOperations, ShouldAddNewStudent)
 {
@@ -116,6 +116,41 @@ TEST(MainOperations, ShouldSortByPesel)
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 92090140190);
     dbManager.sortByPesel(Order::Asc);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120190);
+}
+
+TEST(MainOperations, ShouldSaveToFile)
+{
+    EXPECT_TRUE(dbManager.saveToFile("test_data.db"));
+}
+
+TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile)
+{
+    EXPECT_EQ(dbManager.getCount(), 6);
+    dbManager.eraseDatabase();
+    EXPECT_EQ(dbManager.getCount(), 0);
+    EXPECT_TRUE(dbManager.loadFromFile("test_data.db"));
+    EXPECT_EQ(dbManager.getCount(), 6);
+}
+
+TEST(MainOperations, ShouldModify)
+{
+    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
+    EXPECT_EQ(dbManager.findStudentAndModifyFirstname(dbManager.getFullList().front()->getIndexNr(), "Danuta"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danuta");
+
+    EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Koziol");
+    EXPECT_EQ(dbManager.findStudentAndModifyLastname(dbManager.getFullList().front()->getIndexNr(), "Kozlowska"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Kozlowska");
+
+    EXPECT_EQ(dbManager.getFullList().front()->getAddress(), "Wuja 22");
+    EXPECT_EQ(dbManager.findStudentAndModifyAddress(dbManager.getFullList().front()->getIndexNr(), "Luny 134"), ErrorCheck::OK);
+
+    EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
+
+
+    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
 }
 
 //

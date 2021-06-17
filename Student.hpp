@@ -1,11 +1,7 @@
 #pragma once
 #include <string>
+#include "enums.hpp"
 
-enum class Sex
-{
-    Male,
-    Female
-};
 
 class Student
 {
@@ -26,15 +22,17 @@ public:
     long int getPeselNr() const { return peselNr_; };
     Sex getSex() const { return sexType_; };
 
-    std::string sexToString(Sex sexType) {return (sexType==Sex::Male)?"Male":"Female";};
+    // Setters
+    void setFirstname(const std::string &firstName) { firstname_ = firstName; };
+    void setLastname(const std::string &lastName) { lastname_ = lastName; };
+    void setAddress(const std::string &address) { address_ = address; };
+    void setIndexNr(const int &indexNr) { indexNr_ = indexNr; }; // Be careful - after use this function db should rebuild indexes
+    void setPeselNr(const long int &peselNr) { peselNr_ = peselNr; }; // Be careful - after use this function db should rebuild indexes
 
-    Student() {};
+    std::string sexToString(Sex sexType) { return (sexType == Sex::Male) ? "Male" : "Female"; };
+
+    Student(){};
 
     Student(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType) // c - tor
-        : firstname_(firstName)
-        , lastname_(lastName)
-        , address_(address)
-        , indexNr_(indexNr)
-        , peselNr_(peselNr)
-        , sexType_(sexType){};
+        : firstname_(firstName), lastname_(lastName), address_(address), indexNr_(indexNr), peselNr_(peselNr), sexType_(sexType){};
 };

@@ -112,7 +112,7 @@ bool db::deleteByIndexNr(const int &IdxNr)
     auto it = findStudentByIdx_Binary(IdxNr);
     if (it)
     {
-        Students_.erase(std::remove(Students_.begin(),Students_.end(),*it),Students_.end());
+        Students_.erase(std::remove(Students_.begin(), Students_.end(), *it), Students_.end());
         rebuildIndex();
         return true;
     };
@@ -268,7 +268,7 @@ bool db::saveToFile(const std::string &filename)
     fileObject.close();
     return true;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool db::loadFromFile(const std::string &filename)
 {
     std::ifstream fileObject(filename, std::ios::out | std::ios::binary);
@@ -317,3 +317,91 @@ bool db::loadFromFile(const std::string &filename)
     fileObject.close();
     return true;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void db::eraseDatabase()
+{
+    Students_.clear();
+    rebuildIndex();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck db::findStudentAndModifyFirstname(const int &IdxNr, const std::string &newFirstname)
+{
+    auto found = findStudentByIdx_Binary(IdxNr);
+    if (found)
+    {
+        found->get()->setFirstname(newFirstname);
+        return ErrorCheck::OK;
+    }
+    return ErrorCheck::NotFound;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck db::findStudentAndModifyLastname(const int &IdxNr, const std::string &newLastname)
+{
+    auto found = findStudentByIdx_Binary(IdxNr);
+    if (found)
+    {
+        found->get()->setLastname(newLastname);
+        return ErrorCheck::OK;
+    }
+    return ErrorCheck::NotFound;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck db::findStudentAndModifyAddress(const int &IdxNr, const std::string &newAddress)
+{
+    auto found = findStudentByIdx_Binary(IdxNr);
+    if (found)
+    {
+        found->get()->setAddress(newAddress);
+        return ErrorCheck::OK;
+    }
+    return ErrorCheck::NotFound;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck db::findStudentAndModifyIndexNr(const int &IdxNr, const int &newIndexNr)
+{
+    auto found = findStudentByIdx_Binary(IdxNr);
+    if (found)
+    {
+        if (findStudentByIdx_Binary(newIndexNr))
+        {
+            return ErrorCheck::IndexInUse;
+        };
+
+        found->get()->setIndexNr(newIndexNr);
+        rebuildIndex();
+        return ErrorCheck::OK;
+    }
+    return ErrorCheck::NotFound;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const long int &newPeselNr)
+{
+    auto found = findStudentByIdx_Binary(IdxNr);
+    if (found)
+    {
+        if (findStudentByPesel_Binary(newPeselNr))
+        {
+            return ErrorCheck::PeselInUse;
+        };
+
+        if (!peselValidator(newPeselNr))
+        {
+            return ErrorCheck::PeselInvalid;
+        }
+
+        found->get()->setPeselNr(newPeselNr);
+        rebuildIndex();
+        return ErrorCheck::OK;
+    }
+    return ErrorCheck::NotFound;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool db::peselValidator(const long int& PeselNr) 
+{
+    if (!PeselValidation_) {return true;}
+
+
+
+
+    return true; // FOR NOW PASS EVERYTHING
+    }; 

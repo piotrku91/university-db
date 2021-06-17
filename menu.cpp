@@ -66,7 +66,14 @@ void menu::searchAndShow(const long int &PeselNr)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::deleteUser(const int &IndexNr)
 {
-    if (dbManager_.deleteByIndexNr(IndexNr)) {std::cout << "SUCCESS! Student removed from database.";} else {std::cout << "ERROR! Student for remove not found!";};
+    if (dbManager_.deleteByIndexNr(IndexNr))
+    {
+        std::cout << "SUCCESS! Student removed from database.";
+    }
+    else
+    {
+        std::cout << "ERROR! Student for remove not found!";
+    };
     std::cout << "\n";
 }
 
@@ -94,8 +101,7 @@ void menu::showDbView_Pesel(Order O)
     std::cout << "\n ----------------------------------------- \n"
               << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
               << "\n ----------------------------------------- \n"
-              << "All records: " << dbManager_.getCount() <<
-              " | Sort by PESEL - " << getOrderString(O) << "\n\n";
+              << "All records: " << dbManager_.getCount() << " | Sort by PESEL - " << getOrderString(O) << "\n\n";
     for (auto &person : dbManager_.sortByPeselTemporary(O))
     {
         showStudent(*person);
@@ -109,8 +115,7 @@ void menu::showDbView_LastName(Order O)
     std::cout << "\n ----------------------------------------- \n"
               << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
               << "\n ----------------------------------------- \n"
-              << "All records: " << dbManager_.getCount() <<
-              " | Sort by last name - " << getOrderString(O) << "\n\n";
+              << "All records: " << dbManager_.getCount() << " | Sort by last name - " << getOrderString(O) << "\n\n";
     for (auto &person : dbManager_.sortByLastNameTemporary(O))
     {
         showStudent(*person);
@@ -119,3 +124,25 @@ void menu::showDbView_LastName(Order O)
     std::cout << std::endl;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void menu::OldMainTests()
+{
+    addNewUser("Roman", "Szpicruta", "Durnia 50", 29481, 90010120190, Sex::Male);
+    addNewUser("Anna", "Torbisko", "Flaszki 1", 29222, 89010120190, Sex::Female);
+    addNewUser("Tomek", "Kola", "Janka 2", 29121, 92010120190, Sex::Male);
+    addNewUser("Tomek", "Kola", "Janka 2", 29128, 92010120190, Sex::Male);
+    addNewUser("Danka", "Koziol", "Wuja 22", 20128, 42010120190, Sex::Female);
+    addNewUser("Jurek", "Znicz", "Luny 222", 10128, 62010140190, Sex::Male);
+    addNewUser("Zenobiusz", "Gorizek", "Stefana 232", 10127, 92090140190, Sex::Male);
+    addNewUser("Piotr", "Ameba", "Stefana 232", 17127, 72090140190, Sex::Male);
+
+    showDb();
+    searchAndShow("Torbisko");
+    searchAndShow(90010120190);
+    deleteUser(10128);
+    showDb();
+    searchAndShow(90010120190);
+    //dbManager.sortByPesel(Order::Asc);
+    showDbView_Pesel();
+    showDbView_LastName(Order::Asc);
+    showDb();
+}
