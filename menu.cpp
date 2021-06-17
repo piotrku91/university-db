@@ -124,6 +124,16 @@ void menu::showDbView_LastName(Order O)
     std::cout << std::endl;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::string menu::getOrderString(Order O)
+    {
+        if (O == Order::Asc)
+        {
+            return "Ascending";
+        };
+        return "Descending";
+    };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::OldMainTests()
 {
     addNewUser("Roman", "Szpicruta", "Durnia 50", 29481, 90010120190, Sex::Male);
@@ -146,3 +156,42 @@ void menu::OldMainTests()
     showDbView_LastName(Order::Asc);
     showDb();
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void menu::tokenize(const std::string &t_UserCommand, const char t_Delim, std::vector<std::string> &t_Args)
+{
+    size_t start;
+    size_t end{0};
+
+    while ((start = t_UserCommand.find_first_not_of(t_Delim, end)) != std::string::npos)
+    {
+        end = t_UserCommand.find(t_Delim, start);
+        t_Args.push_back(t_UserCommand.substr(start, end - start));
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void menu::mainLoop()
+{
+    while (!Exit_)
+    {
+
+        std::cout << "\n--------------------------------------------------------------------------------------------------" << std::endl;
+        std::cout << "university-db | Type command to execute: " << std::endl;
+        CommandArgs_.clear();
+        UserCommand_.clear();
+       
+
+        std::getline(std::cin, UserCommand_);
+        std::cout << std::endl;
+        tokenize(UserCommand_, ' ', CommandArgs_);
+        try
+        {
+            MapCommands_.at(CommandArgs_[0])();
+        }
+        catch (...)
+        {
+           
+            std::cout << "Unknown command or error! Type: help to check all available commands or: [command] help to get help of specify command.\n";
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

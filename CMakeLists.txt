@@ -38,7 +38,7 @@ endif()
 project(university-db)
 enable_testing()
 
-add_executable(${PROJECT_NAME} main.cpp db.cpp menu.cpp)
+add_executable(${PROJECT_NAME} main.cpp db.cpp menu.cpp menu_cmds.cpp)
 
 add_executable(${PROJECT_NAME}-ut test.cpp db.cpp)
 
