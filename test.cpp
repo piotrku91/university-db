@@ -134,7 +134,7 @@ TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile)
 
 TEST(MainOperations, ShouldModify)
 {
-   // EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
+    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
     EXPECT_EQ(dbManager.findStudentAndModifyFirstname(dbManager.getFullList().front()->getIndexNr(), "Danuta"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danuta");
 
