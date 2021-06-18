@@ -276,8 +276,8 @@ bool db::loadFromFile(const std::string &filename)
     {
         return false;
     };
-    size_t Counter;
-    size_t tmpSizeVar;
+    size_t Counter=0;
+    size_t tmpSizeVar=0;
 
     // Read counter
     fileObject.read((char *)&Counter, sizeof(Counter));
