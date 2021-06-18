@@ -120,6 +120,7 @@ TEST(MainOperations, ShouldSortByPesel)
 
 TEST(MainOperations, ShouldSaveToFile)
 {
+    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
     EXPECT_TRUE(dbManager.saveToFile("test_data.db"));
 }
 
@@ -128,7 +129,7 @@ TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile)
     EXPECT_EQ(dbManager.getCount(), 6);
     dbManager.eraseDatabase();
     EXPECT_EQ(dbManager.getCount(), 0);
-    //EXPECT_TRUE(dbManager.loadFromFile("test_data.db"));
+    EXPECT_TRUE(dbManager.loadFromFile("test_data.db"));
     EXPECT_EQ(dbManager.getCount(), 6);
 }
 
