@@ -255,7 +255,7 @@ bool db::saveToFile(const std::string &filename)
 
         // Save int indexNr_
         auto tmpSizeVar2 = OneStudent->getIndexNr();
-        fileObject.wrotne((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
+        fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
 
         // Save long int indexNr_
         auto tmpSizeVar3 = OneStudent->getPeselNr();
