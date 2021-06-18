@@ -234,7 +234,7 @@ bool db::saveToFile(const std::string &filename)
         return false;
     };
     // Save count of all records
-    auto tmpSizeVar = getCount();
+    size_t tmpSizeVar = getCount();
     fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
     for (auto &OneStudent : Students_)
     {
@@ -286,7 +286,7 @@ bool db::loadFromFile(const std::string &filename)
     {
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar);
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
         // Read lastname_
