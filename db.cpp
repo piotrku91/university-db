@@ -239,7 +239,7 @@ bool db::saveToFile(const std::string &filename)
     for (auto &OneStudent : Students_)
     {
         // Save string firstName_
-        tmpSizeVar = OneStudent->getFirstname().size()-1;
+        tmpSizeVar = OneStudent->getFirstname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
@@ -286,7 +286,7 @@ bool db::loadFromFile(const std::string &filename)
     {
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
         // Read lastname_
