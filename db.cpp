@@ -239,7 +239,7 @@ bool db::saveToFile(const std::string &filename)
     for (auto &OneStudent : Students_)
     {
         // Save string firstName_
-        tmpSizeVar = OneStudent->getFirstname().size();
+        tmpSizeVar = OneStudent->getFirstname().size()-1;
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
