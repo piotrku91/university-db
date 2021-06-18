@@ -31,7 +31,7 @@ public:
 
     std::string sexToString(Sex sexType) { return (sexType == Sex::Male) ? "Male" : "Female"; };
 
-    Student(){};
+   
 
     Student(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType) // c - tor
         : firstname_(firstName), lastname_(lastName), address_(address), indexNr_(indexNr), peselNr_(peselNr), sexType_(sexType){};
