@@ -237,17 +237,19 @@ bool db::saveToFile(const std::string &filename)
     size_t tmpSizeVar = getCount();
     fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
     for (auto &OneStudent : Students_)
-    {
-      
-        // Save string lastName_
-        tmpSizeVar = OneStudent->getLastname().size();
-        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
+
+tmpSizeVar=0xFF; // dummy
+fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
 
   // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
+
+// Save string lastName_
+        tmpSizeVar = OneStudent->getLastname().size();
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
 
         // Save string address_
@@ -287,18 +289,18 @@ bool db::loadFromFile(const std::string &filename)
     for (size_t i = 0; i < Counter; i++)
     {
 
- // Read lastname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar + 1);
-        fileObject.read(lastNameTmp.get(), tmpSizeVar);
 
-
-
-        // Read firstname_
+  // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar + 1);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
+
+ // Read lastname_
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        fileObject.read(lastNameTmp.get(), tmpSizeVar);
+      
        
         // Read address_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
