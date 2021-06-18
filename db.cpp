@@ -234,35 +234,35 @@ bool db::saveToFile(const std::string &filename)
         return false;
     };
     // Save count of all records
-    size_t &&tmpSizeVar = std::move(getCount());
+    auto tmpSizeVar = getCount();
     fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
     for (auto &OneStudent : Students_)
     {
         // Save string firstName_
-        tmpSizeVar = std::move(OneStudent->getFirstname().size());
+        tmpSizeVar = OneStudent->getFirstname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
-        tmpSizeVar = std::move(OneStudent->getLastname().size());
+        tmpSizeVar = OneStudent->getLastname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string address_
-        tmpSizeVar = std::move(OneStudent->getAddress().size());
+        tmpSizeVar = OneStudent->getAddress().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
 
         // Save int indexNr_
-        int &&tmpSizeVar2 = std::move(OneStudent->getIndexNr());
-        fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
+        auto tmpSizeVar2 = OneStudent->getIndexNr();
+        fileObject.wrotne((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
 
         // Save long int indexNr_
-        long int &&tmpSizeVar3 = std::move(OneStudent->getPeselNr());
+        auto tmpSizeVar3 = OneStudent->getPeselNr();
         fileObject.write((char *)&tmpSizeVar3, sizeof(tmpSizeVar3));
 
         // Save sex
-        tmpSizeVar2 = std::move(static_cast<int>(OneStudent->getSex()));
+        tmpSizeVar2 = static_cast<int>(OneStudent->getSex());
         fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
     }
     fileObject.close();
