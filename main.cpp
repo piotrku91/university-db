@@ -7,6 +7,4 @@ int main()
    db dbManager;
    menu mainMenu(dbManager);
    mainMenu.run();
-
-   
 }

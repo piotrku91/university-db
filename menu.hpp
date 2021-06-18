@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <functional>
+#include <iomanip>
 
 #include "db.hpp"
 
@@ -20,6 +21,7 @@ private:
     std::map<std::string, std::function<void()>> MapCommands_{
         {"help", [this]() { help_command(); }},
         {"showdb", [this]() { showdb_command(); }},
+        {"sortdb", [this]() { sortdb_command(); }},
         {"exit", [this]() { Exit_ = true; }}
     };
 
@@ -37,7 +39,10 @@ public:
     std::string getOrderString(Order O);
    
 
-    
+    // Functions / Helpers for display
+    void Display_prepareHeaderCaption(const std::string& Text);
+    void Display_prepareHeader();
+    void Display_prepareFooter(const std::string& Text="");
 
     // Functions to communication with user and other
     void run() { mainLoop(); };
@@ -45,6 +50,7 @@ public:
     void tokenize(const std::string &t_UserCommand, const char t_Delim, std::vector<std::string> &t_Args);
 
     void showdb_command();
+    void sortdb_command();
     void help_command();
 
     menu(db &dbManager) : dbManager_(dbManager){};

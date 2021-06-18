@@ -40,7 +40,7 @@ TEST(MainOperations, ShouldANotAddDuplicatesIndex)
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
-TEST(MainOperations, ShouldANotAddDuplicatesPesel_Test)
+TEST(MainOperations, ShouldANotAddDuplicatesPesel)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
     EXPECT_EQ(dbManager.addStudent("Tomek", "Kola", "Janka 2", 29124, 92010120190, Sex::Male), ErrorCheck::PeselInUse);
@@ -148,9 +148,28 @@ TEST(MainOperations, ShouldModify)
     EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 
-
     EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
+}
+
+TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
+{
+    EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::IndexInUse);
+    EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
+}
+
+TEST(MainOperations, ShouldNotModifyPeselWhenIsDuplicate)
+{
+    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::PeselInUse);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
+}
+
+TEST(MainOperations, ShouldValidatePesel)
+{
+    dbManager.enablePeselValidation(true);
+    EXPECT_TRUE(dbManager.peselValidator(55030101193,Sex::Male));
+    EXPECT_FALSE(dbManager.peselValidator(55030101193,Sex::Female));
+    EXPECT_FALSE(dbManager.peselValidator(55030101197,Sex::Male));
 }
 
 //

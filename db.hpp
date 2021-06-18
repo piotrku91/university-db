@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <fstream>
 #include <map>
 #include <memory>
@@ -13,14 +14,14 @@ private:
     std::vector<std::unique_ptr<Student>> Students_;
     std::map<int,std::unique_ptr<Student>*> IndexOfStudentIdxs_;
     std::map<long int,std::unique_ptr<Student>*> IndexOfStudentPesels_;
-    std::unique_ptr<Student>& getStudent(std::unique_ptr<Student>* StudentPtr) { return *StudentPtr;};
+    const std::unique_ptr<Student>& getStudent(std::unique_ptr<Student>* StudentPtr) { return *StudentPtr;};
     bool PeselValidation_;
 
 public: // Setters / main operations
     ErrorCheck addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType);
-    ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const long int& PeselNr);
+    ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const long int& PeselNr, Sex sexType);
     bool deleteByIndexNr(const int &IdxNr);
-    bool peselValidator(const long int& PeselNr); // TO IMPLEMENT - for now pass everything
+    bool peselValidator(const long int& PeselNr, Sex sexType); // TO IMPLEMENT - for now pass everything
     std::vector<std::unique_ptr<Student>*> sortByLastNameTemporary(Order O=Order::Asc);
     std::vector<std::unique_ptr<Student>*> sortByPeselTemporary(Order O=Order::Asc);
     void sortByLastName(Order O=Order::Asc);

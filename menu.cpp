@@ -38,8 +38,10 @@ void menu::searchAndShow(const std::string &lastName)
 
     if (found)
     {
-        std::cout << "Student found by lastname! : ";
+        Display_prepareHeaderCaption("Student found by lastname!");
+        Display_prepareHeader();
         showStudent(*found);
+        Display_prepareFooter();
     }
     else
     {
@@ -54,8 +56,11 @@ void menu::searchAndShow(const long int &PeselNr)
 
     if (found)
     {
-        std::cout << "Student found by PESEL number! : ";
+
+        Display_prepareHeaderCaption("Student found by PESEL number");
+        Display_prepareHeader();
         showStudent(*found);
+        Display_prepareFooter();
     }
     else
     {
@@ -79,59 +84,60 @@ void menu::deleteUser(const int &IndexNr)
 
 void menu::showStudent(const std::unique_ptr<Student> &person)
 {
-    std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
+    std::cout << std::left;
+    std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << person->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";
+
+    // std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
 }
 
 void menu::showDb()
 {
-    std::cout << "\n ----------------------------------------- \n"
-              << "     ORIGINAL VIEW OF STUDENTS DATABASE"
-              << "\n ----------------------------------------- \n"
-              << "All records: " << dbManager_.getCount() << "\n\n";
+    Display_prepareHeaderCaption("ORIGINAL VIEW OF STUDENTS DATABASE");
+    Display_prepareHeader();
     for (auto &person : dbManager_.getFullList())
     {
         showStudent(person);
         std::cout << std::endl;
     };
+    Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()));
     std::cout << std::endl;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_Pesel(Order O)
 {
-    std::cout << "\n ----------------------------------------- \n"
-              << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
-              << "\n ----------------------------------------- \n"
-              << "All records: " << dbManager_.getCount() << " | Sort by PESEL - " << getOrderString(O) << "\n\n";
+    Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
+    Display_prepareHeader();
     for (auto &person : dbManager_.sortByPeselTemporary(O))
     {
         showStudent(*person);
         std::cout << std::endl;
     };
+    Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by PESEL - " + getOrderString(O));
     std::cout << std::endl;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_LastName(Order O)
 {
-    std::cout << "\n ----------------------------------------- \n"
-              << " TEMPORARY VIEW OF SORTED STUDENTS DATABASE"
-              << "\n ----------------------------------------- \n"
-              << "All records: " << dbManager_.getCount() << " | Sort by last name - " << getOrderString(O) << "\n\n";
+
+    Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
+    Display_prepareHeader();
     for (auto &person : dbManager_.sortByLastNameTemporary(O))
     {
         showStudent(*person);
         std::cout << std::endl;
     };
+    Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by Lastname - " + getOrderString(O));
     std::cout << std::endl;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::string menu::getOrderString(Order O)
+{
+    if (O == Order::Asc)
     {
-        if (O == Order::Asc)
-        {
-            return "Ascending";
-        };
-        return "Descending";
+        return "Ascending";
     };
+    return "Descending";
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::OldMainTests()
@@ -178,7 +184,6 @@ void menu::mainLoop()
         std::cout << "university-db | Type command to execute: " << std::endl;
         CommandArgs_.clear();
         UserCommand_.clear();
-       
 
         std::getline(std::cin, UserCommand_);
         std::cout << std::endl;
@@ -189,9 +194,60 @@ void menu::mainLoop()
         }
         catch (...)
         {
-           
+
             std::cout << "Unknown command or error! Type: help to check all available commands or: [command] help to get help of specify command.\n";
         }
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void menu::Display_prepareHeaderCaption(const std::string &Text)
+{
+    std::cout << std::left;
+    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setw(0) << std::setfill(' ');
+    std::cout << "+";
+
+    std::cout << "\n";
+    std::cout << " | " << std::setw(120 + (6 * std::size(" | ")) - 9) << Text << std::right << " |";
+    std::cout << std::setw(0);
+    std::cout << "\n";
+}
+
+void menu::Display_prepareHeader()
+{
+    std::cout << std::left;
+    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setw(0) << std::setfill(' ');
+    std::cout << "+";
+
+    std::cout << "\n";
+    std::cout << " | " << std::setw(20) << "Firstname"
+              << " | " << std::setw(20) << "Lastname"
+              << " | " << std::setw(20) << "Address"
+              << " | " << std::setw(20) << "Index number"
+              << " | " << std::setw(20) << "Pesel number"
+              << " | " << std::setw(20) << "Sex"
+              << " | " << std::endl;
+    std::cout << std::setw(0);
+
+    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setw(0) << std::setfill(' ');
+    std::cout << "+\n";
+}
+
+void menu::Display_prepareFooter(const std::string &Text)
+{
+
+    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setw(0) << std::setfill(' ');
+    std::cout << "+";
+
+    std::cout << "\n";
+    std::cout << " | " << std::setw(120 + (6 * std::size(" | ")) - 9) << Text << " |";
+    std::cout << std::setw(0);
+    std::cout << "\n";
+
+    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setw(0) << std::setfill(' ');
+    std::cout << "+\n";
+}

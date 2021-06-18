@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
-    switch (checkIdxAndPeselUnique(indexNr, peselNr))
+    switch (checkIdxAndPeselUnique(indexNr, peselNr, sexType))
     {
     case ErrorCheck::OK:
     {
@@ -119,7 +119,7 @@ bool db::deleteByIndexNr(const int &IdxNr)
     return false;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr)
+ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr, Sex sexType)
 {
 
     if (Students_.empty())
@@ -127,7 +127,7 @@ ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr)
         return ErrorCheck::OK;
     };
 
-    if (!peselValidator(PeselNr))
+    if (!peselValidator(PeselNr, sexType))
     {
         return ErrorCheck::PeselInvalid;
     }
@@ -384,7 +384,7 @@ ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const long int &new
             return ErrorCheck::PeselInUse;
         };
 
-        if (!peselValidator(newPeselNr))
+        if (!peselValidator(newPeselNr, found->get()->getSex()))
         {
             return ErrorCheck::PeselInvalid;
         }
@@ -396,12 +396,30 @@ ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const long int &new
     return ErrorCheck::NotFound;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool db::peselValidator(const long int& PeselNr) 
+bool db::peselValidator(const long int &PeselNr, Sex sexType)
 {
-    if (!PeselValidation_) {return true;}
+    if (!PeselValidation_)
+    {
+        return true;
+    }
+    std::string tmpStringPesel = std::to_string(PeselNr);
+    long int Sum;
 
+    std::array<int, 11> PESEL;
+    for (int i = 0; i < PESEL.size(); ++i)
+    {
+        PESEL[i] = (tmpStringPesel[i] - 48);
+    }
 
+    Sum = PESEL[0] * 1 + PESEL[1] * 3 + PESEL[2] * 7 + PESEL[3] * 9 + PESEL[4] * 1 + PESEL[5] * 3 + PESEL[6] * 7 + PESEL[7] * 9 + PESEL[8] * 1 + PESEL[9] * 3;
 
+Sex sexInPesel;
+if (!(PESEL[9]%2)) {sexInPesel=Sex::Female;} else {sexInPesel=Sex::Male;};
 
-    return true; // FOR NOW PASS EVERYTHING
-    }; 
+    if ((PESEL.back() == ((10 - Sum % 10) % 10)) && (sexInPesel==sexType))
+    {
+        return true;
+    };
+
+    return false;
+};
