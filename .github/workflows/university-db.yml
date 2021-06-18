@@ -1,0 +1,22 @@
+
+      
+name: university-db
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  university-db:
+    runs-on: ubuntu-latest
+    env:
+      path: build
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Compile
+      working-directory: ${{ env.path }}
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: ${{ env.path }}
+      run: ctest -V
