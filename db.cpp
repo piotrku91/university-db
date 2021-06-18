@@ -237,7 +237,7 @@ bool db::saveToFile(const std::string &filename)
     size_t tmpSizeVar = getCount();
     fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
     for (auto &OneStudent : Students_)
-
+{
 tmpSizeVar=0xFF; // dummy
 fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
 
