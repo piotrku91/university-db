@@ -237,20 +237,17 @@ bool db::saveToFile(const std::string &filename)
     size_t tmpSizeVar = getCount();
     fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
     for (auto &OneStudent : Students_)
-{
-tmpSizeVar=0xFF; // dummy
-fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+    {
 
-  // Save string firstName_
+        // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
-// Save string lastName_
+        // Save string lastName_
         tmpSizeVar = OneStudent->getLastname().size();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
-
 
         // Save string address_
         tmpSizeVar = OneStudent->getAddress().size();
@@ -280,30 +277,23 @@ bool db::loadFromFile(const std::string &filename)
     {
         return false;
     };
-    size_t Counter=0;
-    size_t tmpSizeVar=0;
-    size_t dummy;
-
-    // Read counter
-    fileObject.read((char *)&Counter, sizeof(Counter));
+    size_t Counter = 0;
+    size_t tmpSizeVar = 0;
 
     for (size_t i = 0; i < Counter; i++)
     {
 
-fileObject.read((char *)&dummy, sizeof(dummy));
 
-  // Read firstname_
+        // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar + 1);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
-
- // Read lastname_
+        // Read lastname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar + 1);
         fileObject.read(lastNameTmp.get(), tmpSizeVar);
-      
-       
+
         // Read address_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar + 1);
@@ -423,10 +413,17 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
 
     Sum = PESEL[0] * 1 + PESEL[1] * 3 + PESEL[2] * 7 + PESEL[3] * 9 + PESEL[4] * 1 + PESEL[5] * 3 + PESEL[6] * 7 + PESEL[7] * 9 + PESEL[8] * 1 + PESEL[9] * 3;
 
-Sex sexInPesel;
-if (!(PESEL[9]%2)) {sexInPesel=Sex::Female;} else {sexInPesel=Sex::Male;};
+    Sex sexInPesel;
+    if (!(PESEL[9] % 2))
+    {
+        sexInPesel = Sex::Female;
+    }
+    else
+    {
+        sexInPesel = Sex::Male;
+    };
 
-    if ((PESEL.back() == ((10 - Sum % 10) % 10)) && (sexInPesel==sexType))
+    if ((PESEL.back() == ((10 - Sum % 10) % 10)) && (sexInPesel == sexType))
     {
         return true;
     };

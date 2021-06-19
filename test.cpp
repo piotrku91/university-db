@@ -26,7 +26,7 @@ TEST(MainOperations, ShouldAddMoreStudents)
     EXPECT_EQ(dbManager.getCount(), 1);
     dbManager.addStudent("Anna", "Torbisko", "Flaszki 1", 29222, 89010120190, Sex::Female);
     dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, 92010120190, Sex::Male);
-    dbManager.addStudent("Danka", "Koziol", "Wuja 22", 20128, 42010120190, Sex::Female);
+    dbManager.addStudent("Koziol", "Danka", "Wuja 22", 20128, 42010120190, Sex::Female);
     dbManager.addStudent("Jurek", "Znicz", "Luny 222", 10128, 62010140190, Sex::Male);
     dbManager.addStudent("Zenobiusz", "Gorizek", "Stefana 232", 10127, 92090140190, Sex::Male);
     dbManager.addStudent("Piotr", "Ameba", "Stefana 232", 17127, 72090140190, Sex::Male);
@@ -120,7 +120,6 @@ TEST(MainOperations, ShouldSortByPesel)
 
 TEST(MainOperations, ShouldSaveToFile)
 {
-    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
     EXPECT_TRUE(dbManager.saveToFile("test_data.db"));
 }
 
@@ -135,11 +134,11 @@ TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile)
 
 TEST(MainOperations, ShouldModify)
 {
-    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
+    EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Koziol");
     EXPECT_EQ(dbManager.findStudentAndModifyFirstname(dbManager.getFullList().front()->getIndexNr(), "Danuta"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danuta");
 
-    EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Koziol");
+    EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Danka");
     EXPECT_EQ(dbManager.findStudentAndModifyLastname(dbManager.getFullList().front()->getIndexNr(), "Kozlowska"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Kozlowska");
 
