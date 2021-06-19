@@ -289,7 +289,7 @@ bool db::loadFromFile(const std::string &filename)
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
-        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar-1);
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar-2);
         fileObject.read(firstNameTmp.get(), sizeof(char)*tmpSizeVar);
 
 
