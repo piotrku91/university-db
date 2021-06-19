@@ -288,17 +288,17 @@ bool db::loadFromFile(const std::string &filename)
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
         // Read lastname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar + 1);
+        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar);
         fileObject.read(lastNameTmp.get(), tmpSizeVar);
 
         // Read address_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar + 1);
+        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar);
         fileObject.read(addressTmp.get(), tmpSizeVar);
 
         // Read indexNr_
