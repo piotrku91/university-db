@@ -1,5 +1,6 @@
 #include "db.hpp"
 #include <algorithm>
+#include <cstdint>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
@@ -234,24 +235,24 @@ bool db::saveToFile(const std::string &filename)
         return false;
     };
     // Save count of all records
-    int tmpSizeVar = getCount();
-    fileObject.write((char *)&tmpSizeVar, sizeof(int));
+    uint32_t tmpSizeVar = getCount();
+    fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
     for (auto &OneStudent : Students_)
     {
 
         // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(int));
+        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
         tmpSizeVar = OneStudent->getLastname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(int));
+        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string address_
         tmpSizeVar = OneStudent->getAddress().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(int));
+        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
         fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
 
         // Save int indexNr_
@@ -277,8 +278,8 @@ bool db::loadFromFile(const std::string &filename)
     {
         return false;
     };
-    int Counter = 0;
-    int tmpSizeVar = 0;
+    uint32_t Counter = 0;
+    uint32_t tmpSizeVar = 0;
 
     // Read counter
     fileObject.read((char *)&Counter, sizeof(Counter));
@@ -287,18 +288,18 @@ bool db::loadFromFile(const std::string &filename)
     {
 
         // Read firstname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(int));
+        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
         std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(firstNameTmp.get(), sizeof(char)*tmpSizeVar);
 
 
         // Read lastname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(int));
+        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
         std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(lastNameTmp.get(), sizeof(char)*tmpSizeVar);
 
         // Read address_
-        fileObject.read((char *)&tmpSizeVar, sizeof(int));
+        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
         std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(addressTmp.get(), sizeof(char)*tmpSizeVar);
 
