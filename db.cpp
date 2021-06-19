@@ -279,10 +279,12 @@ bool db::loadFromFile(const std::string &filename)
     };
     size_t Counter = 0;
     size_t tmpSizeVar = 0;
+    
+    // Read counter
+    fileObject.read((char *)&Counter, sizeof(Counter));
 
     for (size_t i = 0; i < Counter; i++)
     {
-
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
