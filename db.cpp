@@ -288,18 +288,18 @@ bool db::loadFromFile(const std::string &filename)
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar);
+        std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
 
         // Read lastname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar);
+        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(lastNameTmp.get(), tmpSizeVar);
 
         // Read address_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar);
+        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(addressTmp.get(), tmpSizeVar);
 
         // Read indexNr_
@@ -315,7 +315,7 @@ bool db::loadFromFile(const std::string &filename)
         fileObject.read((char *)&sexTmp, sizeof(int));
 
         // Add new student
-        addStudent(tmp, lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
+        addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
     }
     fileObject.close();
     return true;
