@@ -240,17 +240,17 @@ bool db::saveToFile(const std::string &filename)
     {
 
         // Save string firstName_
-        tmpSizeVar = OneStudent->getFirstname().size();
+        tmpSizeVar = OneStudent->getFirstname().length();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
-        tmpSizeVar = OneStudent->getLastname().size();
+        tmpSizeVar = OneStudent->getLastname().length();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string address_
-        tmpSizeVar = OneStudent->getAddress().size();
+        tmpSizeVar = OneStudent->getAddress().length();
         fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
 
@@ -279,7 +279,7 @@ bool db::loadFromFile(const std::string &filename)
     };
     size_t Counter = 0;
     size_t tmpSizeVar = 0;
-    
+
     // Read counter
     fileObject.read((char *)&Counter, sizeof(Counter));
 
