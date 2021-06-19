@@ -289,8 +289,9 @@ bool db::loadFromFile(const std::string &filename)
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar);
-        for (int a=0;a<tmpSizeVar;++a) {firstNameTmp.get()[a]=0;};
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
+        std::string tmp=firstNameTmp.get();
+
 
         // Read lastname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
@@ -315,7 +316,7 @@ bool db::loadFromFile(const std::string &filename)
         fileObject.read((char *)&sexTmp, sizeof(int));
 
         // Add new student
-        addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
+        addStudent(tmp, lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
     }
     fileObject.close();
     return true;
