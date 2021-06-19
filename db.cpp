@@ -235,23 +235,23 @@ bool db::saveToFile(const std::string &filename)
     };
     // Save count of all records
     size_t tmpSizeVar = getCount();
-    fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+    fileObject.write((char *)&tmpSizeVar, sizeof(size_t));
     for (auto &OneStudent : Students_)
     {
 
         // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)&tmpSizeVar, sizeof(size_t));
         fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
         tmpSizeVar = OneStudent->getLastname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)&tmpSizeVar, sizeof(size_t));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string address_
         tmpSizeVar = OneStudent->getAddress().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)&tmpSizeVar, sizeof(size_t));
         fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
 
         // Save int indexNr_
@@ -287,28 +287,28 @@ bool db::loadFromFile(const std::string &filename)
     {
 
         // Read firstname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.read((char *)&tmpSizeVar, sizeof(size_t));
         std::unique_ptr<char> firstNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(firstNameTmp.get(), tmpSizeVar);
 
 
         // Read lastname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.read((char *)&tmpSizeVar, sizeof(size_t));
         std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(lastNameTmp.get(), tmpSizeVar);
 
         // Read address_
-        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.read((char *)&tmpSizeVar, sizeof(size_t));
         std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar+1);
         fileObject.read(addressTmp.get(), tmpSizeVar);
 
         // Read indexNr_
         int indexNr;
-        fileObject.read((char *)&indexNr, sizeof(indexNr));
+        fileObject.read((char *)&indexNr, sizeof(int));
 
         // Read indexNr_
         long int peselNr;
-        fileObject.read((char *)&peselNr, sizeof(peselNr));
+        fileObject.read((char *)&peselNr, sizeof(long int));
 
         // Read indexNr_
         Sex sexTmp;
