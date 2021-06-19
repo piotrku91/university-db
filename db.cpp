@@ -243,7 +243,7 @@ bool db::saveToFile(const std::string &filename)
         // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().length();
         fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
-        fileObject.write((char *)OneStudent->getFirstname().data(), sizeof(char) * tmpSizeVar);
+        fileObject.write((char *)OneStudent->getFirstname().c_str(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
         tmpSizeVar = OneStudent->getLastname().length();
