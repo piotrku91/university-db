@@ -148,7 +148,7 @@ TEST(MainOperations, ShouldModify)
     EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 
-    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullListp().front()->getIndexNr(), 42010120191), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
 }
 
