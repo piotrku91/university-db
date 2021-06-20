@@ -1,6 +1,6 @@
 #include "db.hpp"
 #include <algorithm>
-#include <cstdint>
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
 {
@@ -235,24 +235,25 @@ bool db::saveToFile(const std::string &filename)
         return false;
     };
     // Save count of all records
-    uint32_t tmpSizeVar = getCount();
-    fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
+    auto tmpSizeVar = getCount();
+    fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+
     for (auto &OneStudent : Students_)
     {
 
         // Save string firstName_
         tmpSizeVar = OneStudent->getFirstname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getFirstname().c_str(), sizeof(char) * tmpSizeVar);
 
         // Save string lastName_
         tmpSizeVar = OneStudent->getLastname().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getLastname().data(), sizeof(char) * tmpSizeVar);
 
         // Save string address_
         tmpSizeVar = OneStudent->getAddress().length();
-        fileObject.write((char *)&tmpSizeVar, sizeof(uint32_t));
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
         fileObject.write((char *)OneStudent->getAddress().data(), sizeof(char) * tmpSizeVar);
 
         // Save int indexNr_
@@ -278,8 +279,8 @@ bool db::loadFromFile(const std::string &filename)
     {
         return false;
     };
-    uint32_t Counter = 0;
-    uint32_t tmpSizeVar = 0;
+    size_t Counter = 0;
+    size_t tmpSizeVar = 0;
 
     // Read counter
     fileObject.read((char *)&Counter, sizeof(Counter));
@@ -288,32 +289,31 @@ bool db::loadFromFile(const std::string &filename)
     {
 
         // Read firstname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
-        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar+1);
-        fileObject.read(firstNameTmp.get(), sizeof(char)*tmpSizeVar);
-
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar + 1);
+        fileObject.read(firstNameTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read lastname_
-        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
-        std::unique_ptr<char> lastNameTmp = std::make_unique<char>(tmpSizeVar+1);
-        fileObject.read(lastNameTmp.get(), sizeof(char)*tmpSizeVar);
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        auto lastNameTmp = std::make_unique<char[]>(tmpSizeVar + 1);
+        fileObject.read(lastNameTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read address_
-        fileObject.read((char *)&tmpSizeVar, sizeof(uint32_t));
-        std::unique_ptr<char> addressTmp = std::make_unique<char>(tmpSizeVar+1);
-        fileObject.read(addressTmp.get(), sizeof(char)*tmpSizeVar);
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        auto addressTmp = std::make_unique<char[]>(tmpSizeVar + 1);
+        fileObject.read(addressTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read indexNr_
         int indexNr;
-        fileObject.read((char *)&indexNr, sizeof(int));
+        fileObject.read((char *)&indexNr, sizeof(indexNr));
 
         // Read indexNr_
         long int peselNr;
-        fileObject.read((char *)&peselNr, sizeof(long int));
+        fileObject.read((char *)&peselNr, sizeof(peselNr));
 
         // Read indexNr_
         Sex sexTmp;
-        fileObject.read((char *)&sexTmp, sizeof(int));
+        fileObject.read((char *)&sexTmp, sizeof(sexTmp));
 
         // Add new student
         addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
