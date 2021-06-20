@@ -36,7 +36,7 @@ public: // Setters / main operations
     std::unique_ptr<Student>* findStudentByLastName_Linear(const std::string &lastName);
     std::unique_ptr<Student>* findStudentByPesel_Linear(const long int &PeselNr);
     std::unique_ptr<Student>* findStudentByPesel_Binary(const long int &PeselNr);
-    std::unique_ptr<Student>* findStudentByIdx_Binary(const long int &IdxNr);
+    std::unique_ptr<Student>* findStudentByIdx_Binary(const int &IdxNr);
 
     ErrorCheck findStudentAndModifyFirstname(const int &IdxNr, const std::string &newFirstname);
     ErrorCheck findStudentAndModifyLastname(const int &IdxNr, const std::string &newLastname);

@@ -35,6 +35,8 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+add_compile_options(-Wall -Wextra -Werror -Wconversion -pedantic -pedantic-errors -g)
+
 project(university-db)
 enable_testing()
 

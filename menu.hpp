@@ -1,10 +1,12 @@
 #pragma once
+#include <ctype.h>
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
 #include <functional>
 #include <iomanip>
+#include <tuple>
 
 #include "db.hpp"
 
@@ -19,11 +21,16 @@ private:
     std::vector<std::string> m_CommandArgs;
 
     std::map<std::string, std::function<void()>> MapCommands_{
-        {"help", [this]() { help_command(); }},
-        {"showdb", [this]() { showdb_command(); }},
-        {"sortdb", [this]() { sortdb_command(); }},
-        {"exit", [this]() { Exit_ = true; }}
-    };
+        {"add", [this]()
+         { add_command(); }},
+        {"help", [this]()
+         { help_command(); }},
+        {"showdb", [this]()
+         { showdb_command(); }},
+        {"sortdb", [this]()
+         { sortdb_command(); }},
+        {"exit", [this]()
+         { Exit_ = true; }}};
 
 public:
     // Main functions to communication with database
@@ -37,12 +44,11 @@ public:
     void showDbView_LastName(Order O = Order::Asc);
     void OldMainTests(); // TO DELETE
     std::string getOrderString(Order O);
-   
 
     // Functions / Helpers for display
-    void Display_prepareHeaderCaption(const std::string& Text);
+    void Display_prepareHeaderCaption(const std::string &Text);
     void Display_prepareHeader();
-    void Display_prepareFooter(const std::string& Text="");
+    void Display_prepareFooter(const std::string &Text = "");
 
     // Functions to communication with user and other
     void run() { mainLoop(); };
@@ -52,6 +58,7 @@ public:
     void showdb_command();
     void sortdb_command();
     void help_command();
+    void add_command();
 
     menu(db &dbManager) : dbManager_(dbManager){};
 };

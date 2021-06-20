@@ -9,7 +9,7 @@ void menu::help_command()
         std::cout << entry.first << "\n";
     };
     std::cout << "\nType: [command] help to get help of specify command. Example: showdb help";
-};
+}
 
 void menu::showdb_command()
 {
@@ -162,5 +162,61 @@ void menu::sortdb_command()
     };
 
     std::cout << "Wrong parameter! - try: sort";
+    return;
+}
+
+
+void menu::add_command()
+{
+    if ((CommandArgs_.size() > 1) && (CommandArgs_.size() < 6)) 
+    {
+        {
+              if (CommandArgs_.at(1) == "help")
+    {
+        std::cout << "add - Begins prodecdure of adding new student\n"
+                  << "Type details part by part.\n"
+                  << "Type: add\n"
+                  << "Example: add\n\n";
+    };
+            std::cout << "Type: add\n";
+            return;
+        };
+    }
+
+    std::tuple<std::string,std::string,std::string,int,long int,Sex> tmpVars;
+
+std::cout << "Procedure of addition new strudent open\n\n";
+std::cout << "Type firstname of new student: ";
+std::getline(std::cin, std::get<0>(tmpVars));
+if ((std::get<0>(tmpVars)=="") || (std::any_of(std::get<0>(tmpVars).begin(),std::get<0>(tmpVars).end(),[](char x) {return std::isdigit(x);}))) {std::cout << "Add procedure failed! - Wrong firstname. \n"; return;};
+
+std::cout << "Type lastname of new student: ";
+std::getline(std::cin, std::get<1>(tmpVars));
+if ((std::get<1>(tmpVars)=="") || (std::any_of(std::get<1>(tmpVars).begin(),std::get<1>(tmpVars).end(),[](char x) {return std::isdigit(x);}))) {std::cout << "Add procedure failed! - Wrong lastname. \n"; return;};
+
+std::cout << "Type address of new student: ";
+std::getline(std::cin, std::get<2>(tmpVars));
+if ((std::get<2>(tmpVars)=="") || (std::any_of(std::get<2>(tmpVars).begin(),std::get<2>(tmpVars).end(),[](char x) {return std::isdigit(x);}))) {std::cout << "Add procedure failed! - Wrong address. \n"; return;};
+
+std::cout << "Type index number of new student: ";
+std::string tmpVar;
+std::getline(std::cin, tmpVar);
+if ((tmpVar=="") || (std::any_of(tmpVar.begin(),tmpVar.end(),[](char x) {return !std::isdigit(x);}))) {std::cout << "Add procedure failed! - Wrong Index number . \n"; return;};
+std::get<3>(tmpVars) = std::stoi(tmpVar);
+
+std::cout << "Type PESEL number of new student: ";
+std::getline(std::cin, tmpVar);
+if ((tmpVar=="") || (tmpVar.size()<11) || (std::any_of(tmpVar.begin(),tmpVar.end(),[](char x) {return !std::isdigit(x);}))) {std::cout << "Add procedure failed! - Wrong PESEL number. \n"; return;};
+std::get<4>(tmpVars) = std::stoll(tmpVar);
+
+std::cout << "Type sex of new student (try: f / m): ";
+std::getline(std::cin, tmpVar);
+if ((tmpVar=="") || ((std::tolower(tmpVar[0])!='f') && (std::tolower(tmpVar[0])!='m'))) {std::cout << "Add procedure failed! - Wrong Sex. \n"; return;};
+std::get<5>(tmpVars) = (tmpVar=="f")?Sex::Female : Sex::Male;
+
+std::cout << "Attempt to add student to database... ";
+dbManager_.addStudent(std::get<0>(tmpVars),std::get<1>(tmpVars),std::get<2>(tmpVars),std::get<3>(tmpVars),std::get<4>(tmpVars),std::get<5>(tmpVars));
+// std::apply(dbmanager_.addStudent,tmpVars);
+    std::cout << "";
     return;
 }

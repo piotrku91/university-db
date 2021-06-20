@@ -19,6 +19,11 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
         std::cout << "ERROR! - Pesel is already in database! \n";
         break;
     }
+      case ErrorCheck::NotFound:
+    {
+        std::cout << "ERROR! - Student not found! \n";
+        break;
+    }
     case ErrorCheck::PeselInvalid:
     {
         std::cout << "ERROR! - Invalid PESEL number! \n";
@@ -38,7 +43,7 @@ void menu::searchAndShow(const std::string &lastName)
 
     if (found)
     {
-        Display_prepareHeaderCaption("Student found by lastname!");
+        Display_prepareHeaderCaption("Student found by lastname");
         Display_prepareHeader();
         showStudent(*found);
         Display_prepareFooter();
@@ -101,7 +106,7 @@ void menu::showDb()
     };
     Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()));
     std::cout << std::endl;
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_Pesel(Order O)
 {
@@ -114,7 +119,7 @@ void menu::showDbView_Pesel(Order O)
     };
     Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by PESEL - " + getOrderString(O));
     std::cout << std::endl;
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::showDbView_LastName(Order O)
 {
@@ -128,7 +133,7 @@ void menu::showDbView_LastName(Order O)
     };
     Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by Lastname - " + getOrderString(O));
     std::cout << std::endl;
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::string menu::getOrderString(Order O)
 {
@@ -137,7 +142,7 @@ std::string menu::getOrderString(Order O)
         return "Ascending";
     };
     return "Descending";
-};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::OldMainTests()
@@ -195,7 +200,7 @@ void menu::mainLoop()
         catch (...)
         {
 
-            std::cout << "Unknown command or error! Type: help to check all available commands or: [command] help to get help of specify command.\n";
+            std::cout << "\nUnknown command or ERROR!\n Type: help to check all available commands or: [command] help to get help of specify command.\n";
         }
     }
 }

@@ -34,7 +34,7 @@ ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastN
         break;
     }
     };
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::unique_ptr<Student> *db::findStudentByLastName_Linear(const std::string &lastName)
 {
@@ -90,7 +90,7 @@ std::unique_ptr<Student> *db::findStudentByPesel_Binary(const long int &PeselNr)
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *db::findStudentByIdx_Binary(const long int &IdxNr)
+std::unique_ptr<Student> *db::findStudentByIdx_Binary(const int &IdxNr)
 {
     auto it = (IndexOfStudentIdxs_.find(IdxNr));
 
@@ -156,7 +156,7 @@ void db::sortByLastName(Order O)
                   return (O == Order::Asc) ? false : true;
               });
     rebuildIndex();
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::sortByPesel(Order O)
 {
@@ -169,7 +169,7 @@ void db::sortByPesel(Order O)
                   return (O == Order::Asc) ? false : true;
               });
     rebuildIndex();
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::unique_ptr<Student> *> db::sortByLastNameTemporary(Order O)
 {
@@ -190,7 +190,7 @@ std::vector<std::unique_ptr<Student> *> db::sortByLastNameTemporary(Order O)
               });
 
     return tmpSortedList;
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
 {
@@ -212,7 +212,7 @@ std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
     }
 
     return tmpSortedList;
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::rebuildIndex()
 {
@@ -225,7 +225,7 @@ void db::rebuildIndex()
         IndexOfStudentIdxs_.insert({OneStudent->getIndexNr(), &OneStudent});
         IndexOfStudentPesels_.insert({OneStudent->getPeselNr(), &OneStudent});
     }
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool db::saveToFile(const std::string &filename)
 {
@@ -285,12 +285,12 @@ bool db::loadFromFile(const std::string &filename)
     // Read counter
     fileObject.read((char *)&Counter, sizeof(Counter));
 
-    for (int i = 0; i < Counter; i++)
+    for (size_t i = 0; i < Counter; i++)
     {
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar + 1);
+        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar + 1); 
         fileObject.read(firstNameTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read lastname_
@@ -410,7 +410,7 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
     long int Sum;
 
     std::array<int, 11> PESEL;
-    for (int i = 0; i < PESEL.size(); ++i)
+    for (size_t i = 0; i < PESEL.size(); ++i)
     {
         PESEL[i] = (tmpStringPesel[i] - 48);
     }
@@ -433,4 +433,4 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
     };
 
     return false;
-};
+}
