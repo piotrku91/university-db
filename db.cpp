@@ -451,11 +451,23 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
     {
         sexInPesel = Sex::Male;
     };
+    
+    long int M = (Sum % 10);
 
-    if ((PESEL.back() == ((10 - Sum % 10) % 10)) && (sexInPesel == sexType))
+    if (M)
     {
-        return true;
-    };
+        if ((PESEL.back() == ((10 - M))) && (sexInPesel == sexType))
+        {
+            return true;
+        }
+    }
+    else
+    {
+        if ((PESEL.back() == M) && (sexInPesel == sexType))
+        {
+            return true;
+        }
+    }
 
     return false;
 }
