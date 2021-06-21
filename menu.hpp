@@ -29,6 +29,16 @@ private:
          { showdb_command(); }},
         {"sortdb", [this]()
          { sortdb_command(); }},
+        {"find", [this]()
+         { find_command(); }},
+        {"delete", [this]()
+         { find_command(); }},
+         {"save", [this]()
+         { find_command(); }},
+         {"load", [this]()
+         { find_command(); }},
+         {"clear", [this]()
+         { find_command(); }},
         {"exit", [this]()
          { Exit_ = true; }}};
 
@@ -59,6 +69,8 @@ public:
     void sortdb_command();
     void help_command();
     void add_command();
+    void find_command();
+    void delete_command();
 
     menu(db &dbManager) : dbManager_(dbManager){};
 };

@@ -47,6 +47,6 @@ public: // Setters / main operations
     size_t getCount() const {return Students_.size();};
     const std::vector<std::unique_ptr<Student>> &getFullList() const { return Students_; };
 
-    db(bool loadOnStart=true): PeselValidation_{false} {if (loadOnStart) {loadFromFile("data.db");};}; // c - tor
+    db(bool loadOnStart=true): PeselValidation_{true} {if (loadOnStart) {loadFromFile("data.db");};}; // c - tor
     db(db&) = delete; // c - tor deleted
 };

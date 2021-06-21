@@ -19,7 +19,7 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
         std::cout << "ERROR! - Pesel is already in database! \n";
         break;
     }
-      case ErrorCheck::NotFound:
+    case ErrorCheck::NotFound:
     {
         std::cout << "ERROR! - Student not found! \n";
         break;
@@ -46,6 +46,7 @@ void menu::searchAndShow(const std::string &lastName)
         Display_prepareHeaderCaption("Student found by lastname");
         Display_prepareHeader();
         showStudent(*found);
+        std::cout << std::endl;
         Display_prepareFooter();
     }
     else
@@ -65,6 +66,7 @@ void menu::searchAndShow(const long int &PeselNr)
         Display_prepareHeaderCaption("Student found by PESEL number");
         Display_prepareHeader();
         showStudent(*found);
+        std::cout << std::endl;
         Display_prepareFooter();
     }
     else
@@ -145,29 +147,6 @@ std::string menu::getOrderString(Order O)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::OldMainTests()
-{
-    addNewUser("Roman", "Szpicruta", "Durnia 50", 29481, 90010120190, Sex::Male);
-    addNewUser("Anna", "Torbisko", "Flaszki 1", 29222, 89010120190, Sex::Female);
-    addNewUser("Tomek", "Kola", "Janka 2", 29121, 92010120190, Sex::Male);
-    addNewUser("Tomek", "Kola", "Janka 2", 29128, 92010120190, Sex::Male);
-    addNewUser("Danka", "Koziol", "Wuja 22", 20128, 42010120190, Sex::Female);
-    addNewUser("Jurek", "Znicz", "Luny 222", 10128, 62010140190, Sex::Male);
-    addNewUser("Zenobiusz", "Gorizek", "Stefana 232", 10127, 92090140190, Sex::Male);
-    addNewUser("Piotr", "Ameba", "Stefana 232", 17127, 72090140190, Sex::Male);
-
-    showDb();
-    searchAndShow("Torbisko");
-    searchAndShow(90010120190);
-    deleteUser(10128);
-    showDb();
-    searchAndShow(90010120190);
-    //dbManager.sortByPesel(Order::Asc);
-    showDbView_Pesel();
-    showDbView_LastName(Order::Asc);
-    showDb();
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void menu::tokenize(const std::string &t_UserCommand, const char t_Delim, std::vector<std::string> &t_Args)
 {
     size_t start;
@@ -186,7 +165,7 @@ void menu::mainLoop()
     {
 
         std::cout << "\n--------------------------------------------------------------------------------------------------" << std::endl;
-        std::cout << "university-db | Type command to execute: " << std::endl;
+        std::cout << "piotrq university-db | Type command to execute: " << std::endl;
         CommandArgs_.clear();
         UserCommand_.clear();
 

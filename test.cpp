@@ -6,44 +6,45 @@ db dbManager(false);
 
 TEST(MainOperations, ShouldAddNewStudent)
 {
-    EXPECT_EQ(dbManager.getCount(), 0);
-    dbManager.addStudent("Roman", "Szpicruta", "Durnia 50", 29481, 90010120190, Sex::Male);
+    EXPECT_EQ(dbManager.getCount(), 0);               
+    dbManager.addStudent("Roman", "Szpicruta", "Durnia 50", 29481, 90121464913, Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 1);
 }
 
 TEST(MainOperations, ShouldAddNewStudentValid)
 {
+    if (dbManager.getFullList().empty()) return;
     EXPECT_EQ(dbManager.getFullList()[0]->getFirstname(), "Roman");
     EXPECT_EQ(dbManager.getFullList()[0]->getLastname(), "Szpicruta");
     EXPECT_EQ(dbManager.getFullList()[0]->getAddress(), "Durnia 50");
     EXPECT_EQ(dbManager.getFullList()[0]->getIndexNr(), 29481);
-    EXPECT_EQ(dbManager.getFullList()[0]->getPeselNr(), 90010120190);
+    EXPECT_EQ(dbManager.getFullList()[0]->getPeselNr(), 90121464913);
     EXPECT_EQ(dbManager.getFullList()[0]->getSex(), Sex::Male);
 }
 
 TEST(MainOperations, ShouldAddMoreStudents)
 {
     EXPECT_EQ(dbManager.getCount(), 1);
-    dbManager.addStudent("Anna", "Torbisko", "Flaszki 1", 29222, 89010120190, Sex::Female);
-    dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, 92010120190, Sex::Male);
-    dbManager.addStudent("Danka", "Koziol", "Wuja 22", 20128, 42010120190, Sex::Female);
-    dbManager.addStudent("Jurek", "Znicz", "Luny 222", 10128, 62010140190, Sex::Male);
-    dbManager.addStudent("Zenobiusz", "Gorizek", "Stefana 232", 10127, 92090140190, Sex::Male);
-    dbManager.addStudent("Piotr", "Ameba", "Stefana 232", 17127, 72090140190, Sex::Male);
+    dbManager.addStudent("Anna", "Torbisko", "Flaszki 1", 29222, 87070462648, Sex::Female);
+    dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, 92121377633, Sex::Male);
+    dbManager.addStudent("Danka", "Koziol", "Wuja 22", 20128, 54022845648, Sex::Female);
+    dbManager.addStudent("Jurek", "Znicz", "Luny 222", 10128, 66011781239, Sex::Male);
+    dbManager.addStudent("Zenobiusz", "Gorizek", "Stefana 232", 10127, 95042936259, Sex::Male);
+    dbManager.addStudent("Piotr", "Ameba", "Stefana 232", 17127, 67051489435, Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
 TEST(MainOperations, ShouldANotAddDuplicatesIndex)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
-    EXPECT_EQ(dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, 92010120199, Sex::Male), ErrorCheck::IndexInUse);
+    EXPECT_EQ(dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, 49032157276, Sex::Male), ErrorCheck::IndexInUse);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
 TEST(MainOperations, ShouldANotAddDuplicatesPesel)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
-    EXPECT_EQ(dbManager.addStudent("Tomek", "Kola", "Janka 2", 29124, 92010120190, Sex::Male), ErrorCheck::PeselInUse);
+    dbManager.addStudent("Tomek", "Kola", "Janka 2", 21123, 92121377633, Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
@@ -58,7 +59,7 @@ TEST(MainOperations, ShouldFindByLastName)
         EXPECT_EQ(found->get()->getLastname(), "Znicz");
         EXPECT_EQ(found->get()->getAddress(), "Luny 222");
         EXPECT_EQ(found->get()->getIndexNr(), 10128);
-        EXPECT_EQ(found->get()->getPeselNr(), 62010140190);
+        EXPECT_EQ(found->get()->getPeselNr(), 66011781239);
         EXPECT_EQ(found->get()->getSex(), Sex::Male);
     }
 }
@@ -71,7 +72,7 @@ TEST(MainOperations, ShouldNotFindByLastName)
 
 TEST(MainOperations, ShouldFindByPesel)
 {
-    auto found = dbManager.findStudentByPesel_Binary(62010140190);
+    auto found = dbManager.findStudentByPesel_Binary(66011781239);
     EXPECT_TRUE(found);
 
     if (found)
@@ -80,7 +81,7 @@ TEST(MainOperations, ShouldFindByPesel)
         EXPECT_EQ(found->get()->getLastname(), "Znicz");
         EXPECT_EQ(found->get()->getAddress(), "Luny 222");
         EXPECT_EQ(found->get()->getIndexNr(), 10128);
-        EXPECT_EQ(found->get()->getPeselNr(), 62010140190);
+        EXPECT_EQ(found->get()->getPeselNr(), 66011781239);
         EXPECT_EQ(found->get()->getSex(), Sex::Male);
     }
 }
@@ -111,11 +112,11 @@ TEST(MainOperations, ShouldSortByLastName)
 
 TEST(MainOperations, ShouldSortByPesel)
 {
-    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 72090140190);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 67051489435);
     dbManager.sortByPesel(Order::Desc);
-    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 92090140190);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 95042936259);
     dbManager.sortByPesel(Order::Asc);
-    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120190);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 54022845648);
 }
 
 TEST(MainOperations, ShouldSaveToFile)
@@ -148,8 +149,8 @@ TEST(MainOperations, ShouldModify)
     EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 
-    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::OK);
-    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
+    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 49081828686), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 49081828686);
 }
 
 TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
@@ -160,8 +161,8 @@ TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
 
 TEST(MainOperations, ShouldNotModifyPeselWhenIsDuplicate)
 {
-    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 42010120191), ErrorCheck::PeselInUse);
-    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 42010120191);
+    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), 49081828686), ErrorCheck::PeselInUse);
+    EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), 49081828686);
 }
 
 TEST(MainOperations, ShouldValidatePesel)

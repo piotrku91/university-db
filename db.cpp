@@ -147,6 +147,10 @@ ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::sortByLastName(Order O)
 {
+    if (Students_.empty())
+    {
+        return;
+    };
     std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
               {
                   if (std::lexicographical_compare(StudentPtr1->getLastname().begin(), StudentPtr1->getLastname().end(), StudentPtr2->getLastname().begin(), StudentPtr2->getLastname().end()))
@@ -160,6 +164,12 @@ void db::sortByLastName(Order O)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void db::sortByPesel(Order O)
 {
+
+    if (Students_.empty())
+    {
+        return;
+    };
+
     std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &StudentPtr1, std::unique_ptr<Student> &StudentPtr2)
               {
                   if (StudentPtr1->getPeselNr() < StudentPtr2->getPeselNr())
@@ -173,7 +183,13 @@ void db::sortByPesel(Order O)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::unique_ptr<Student> *> db::sortByLastNameTemporary(Order O)
 {
+
     std::vector<std::unique_ptr<Student> *> tmpSortedList;
+
+    if (Students_.empty())
+    {
+        return tmpSortedList;
+    };
 
     for (auto &OneStudent : Students_)
     {
@@ -196,20 +212,24 @@ std::vector<std::unique_ptr<Student> *> db::sortByPeselTemporary(Order O)
 {
     std::vector<std::unique_ptr<Student> *> tmpSortedList;
 
-    if (O == Order::Asc)
+    if (Students_.empty())
     {
-        for (auto it = IndexOfStudentPesels_.begin(); (it != IndexOfStudentPesels_.end()); ++it)
-        {
-            tmpSortedList.push_back(it->second);
-        };
-    }
-    else
+        return tmpSortedList;
+    };
+
+    for (auto &OneStudent : Students_)
     {
-        for (auto it = IndexOfStudentPesels_.rbegin(); (it != IndexOfStudentPesels_.rend()); ++it)
-        {
-            tmpSortedList.push_back(it->second);
-        };
-    }
+        tmpSortedList.push_back(&OneStudent);
+    };
+
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> *StudentPtr1, std::unique_ptr<Student> *StudentPtr2)
+              {
+                  if (StudentPtr1->get()->getPeselNr() < StudentPtr2->get()->getPeselNr())
+                  {
+                      return (O == Order::Asc) ? true : false;
+                  }
+                  return (O == Order::Asc) ? false : true;
+              });
 
     return tmpSortedList;
 }
@@ -290,7 +310,7 @@ bool db::loadFromFile(const std::string &filename)
 
         // Read firstname_
         fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
-        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar + 1); 
+        auto firstNameTmp = std::make_unique<char[]>(tmpSizeVar + 1);
         fileObject.read(firstNameTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read lastname_
@@ -407,6 +427,10 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
         return true;
     }
     std::string tmpStringPesel = std::to_string(PeselNr);
+    if (tmpStringPesel.length() != 11)
+    {
+        return false;
+    }
     long int Sum;
 
     std::array<int, 11> PESEL;
