@@ -1,6 +1,6 @@
 #include "menu.hpp"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
+void menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
 {
     switch (dbManager_.addStudent(firstName, lastName, address, indexNr, peselNr, sexType))
     {
@@ -37,7 +37,7 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::searchAndShow(const std::string &lastName)
+void menu::searchAndShow_Lastname(const std::string &lastName)
 {
     auto found = dbManager_.findStudentByLastName_Linear(lastName);
 
@@ -56,7 +56,7 @@ void menu::searchAndShow(const std::string &lastName)
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::searchAndShow(const long int &PeselNr)
+void menu::searchAndShow_Pesel(const std::string &PeselNr)
 {
     auto found = dbManager_.findStudentByPesel_Binary(PeselNr);
 

@@ -2,7 +2,7 @@
 #include <algorithm>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType)
+ErrorCheck db::addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
 {
     switch (checkIdxAndPeselUnique(indexNr, peselNr, sexType))
     {
@@ -56,7 +56,7 @@ std::unique_ptr<Student> *db::findStudentByLastName_Linear(const std::string &la
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *db::findStudentByPesel_Linear(const long int &PeselNr)
+std::unique_ptr<Student> *db::findStudentByPesel_Linear(const std::string &PeselNr)
 {
     auto it = (std::find_if(Students_.begin(), Students_.end(), [&PeselNr](std::unique_ptr<Student> &StudentPtr)
                             {
@@ -76,7 +76,7 @@ std::unique_ptr<Student> *db::findStudentByPesel_Linear(const long int &PeselNr)
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *db::findStudentByPesel_Binary(const long int &PeselNr)
+std::unique_ptr<Student> *db::findStudentByPesel_Binary(const std::string &PeselNr)
 {
     auto it = (IndexOfStudentPesels_.find(PeselNr));
 
@@ -120,7 +120,7 @@ bool db::deleteByIndexNr(const int &IdxNr)
     return false;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const long int &PeselNr, Sex sexType)
+ErrorCheck db::checkIdxAndPeselUnique(const int &IdxNr, const std::string &PeselNr, Sex sexType)
 {
 
     if (Students_.empty())
@@ -280,9 +280,10 @@ bool db::saveToFile(const std::string &filename)
         auto tmpSizeVar2 = OneStudent->getIndexNr();
         fileObject.write((char *)&tmpSizeVar2, sizeof(tmpSizeVar2));
 
-        // Save long int indexNr_
-        auto tmpSizeVar3 = OneStudent->getPeselNr();
-        fileObject.write((char *)&tmpSizeVar3, sizeof(tmpSizeVar3));
+         // Save string peselNr_
+        tmpSizeVar = OneStudent->getPeselNr().length();
+        fileObject.write((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        fileObject.write((char *)OneStudent->getPeselNr().data(), sizeof(char) * tmpSizeVar);
 
         // Save sex
         tmpSizeVar2 = static_cast<int>(OneStudent->getSex());
@@ -329,15 +330,16 @@ bool db::loadFromFile(const std::string &filename)
         fileObject.read((char *)&indexNr, sizeof(indexNr));
 
         // Read indexNr_
-        long int peselNr;
-        fileObject.read((char *)&peselNr, sizeof(peselNr));
+        fileObject.read((char *)&tmpSizeVar, sizeof(tmpSizeVar));
+        auto PeselNrTmp = std::make_unique<char[]>(tmpSizeVar + 1);
+        fileObject.read(PeselNrTmp.get(), sizeof(char) * tmpSizeVar);
 
         // Read indexNr_
         Sex sexTmp;
         fileObject.read((char *)&sexTmp, sizeof(sexTmp));
 
         // Add new student
-        addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, peselNr, sexTmp);
+        addStudent(firstNameTmp.get(), lastNameTmp.get(), addressTmp.get(), indexNr, PeselNrTmp.get(), sexTmp);
     }
     fileObject.close();
     return true;
@@ -399,7 +401,7 @@ ErrorCheck db::findStudentAndModifyIndexNr(const int &IdxNr, const int &newIndex
     return ErrorCheck::NotFound;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const long int &newPeselNr)
+ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const std::string &newPeselNr)
 {
     auto found = findStudentByIdx_Binary(IdxNr);
     if (found)
@@ -421,13 +423,13 @@ ErrorCheck db::findStudentAndModifyPeselNr(const int &IdxNr, const long int &new
     return ErrorCheck::NotFound;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool db::peselValidator(const long int &PeselNr, Sex sexType)
+bool db::peselValidator(const std::string &PeselNr, Sex sexType)
 {
     if (!PeselValidation_)
     {
         return true;
     }
-    std::string tmpStringPesel = std::to_string(PeselNr);
+    std::string tmpStringPesel = PeselNr;
     if (tmpStringPesel.length() != 11)
     {
         return false;
@@ -451,7 +453,7 @@ bool db::peselValidator(const long int &PeselNr, Sex sexType)
     {
         sexInPesel = Sex::Male;
     };
-    
+
     long int M = (Sum % 10);
 
     if (M)

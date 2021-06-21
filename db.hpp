@@ -13,15 +13,15 @@ class db
 private:
     std::vector<std::unique_ptr<Student>> Students_;
     std::map<int,std::unique_ptr<Student>*> IndexOfStudentIdxs_;
-    std::map<long int,std::unique_ptr<Student>*> IndexOfStudentPesels_;
+    std::map<std::string,std::unique_ptr<Student>*> IndexOfStudentPesels_;
     const std::unique_ptr<Student>& getStudent(std::unique_ptr<Student>* StudentPtr) { return *StudentPtr;};
     bool PeselValidation_;
 
 public: // Setters / main operations
-    ErrorCheck addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType);
-    ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const long int& PeselNr, Sex sexType);
+    ErrorCheck addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType);
+    ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const std::string& PeselNr, Sex sexType);
     bool deleteByIndexNr(const int &IdxNr);
-    bool peselValidator(const long int& PeselNr, Sex sexType); 
+    bool peselValidator(const std::string& PeselNr, Sex sexType); 
     std::vector<std::unique_ptr<Student>*> sortByLastNameTemporary(Order O=Order::Asc);
     std::vector<std::unique_ptr<Student>*> sortByPeselTemporary(Order O=Order::Asc);
     void sortByLastName(Order O=Order::Asc);
@@ -34,15 +34,15 @@ public: // Setters / main operations
     
     // Getters
     std::unique_ptr<Student>* findStudentByLastName_Linear(const std::string &lastName);
-    std::unique_ptr<Student>* findStudentByPesel_Linear(const long int &PeselNr);
-    std::unique_ptr<Student>* findStudentByPesel_Binary(const long int &PeselNr);
+    std::unique_ptr<Student>* findStudentByPesel_Linear(const std::string &PeselNr);
+    std::unique_ptr<Student>* findStudentByPesel_Binary(const std::string &PeselNr);
     std::unique_ptr<Student>* findStudentByIdx_Binary(const int &IdxNr);
 
     ErrorCheck findStudentAndModifyFirstname(const int &IdxNr, const std::string &newFirstname);
     ErrorCheck findStudentAndModifyLastname(const int &IdxNr, const std::string &newLastname);
     ErrorCheck findStudentAndModifyAddress(const int &IdxNr, const std::string &newAddress);
     ErrorCheck findStudentAndModifyIndexNr(const int &IdxNr, const int &newIndexNr);
-    ErrorCheck findStudentAndModifyPeselNr(const int &IdxNr, const long int &newPeselNr);
+    ErrorCheck findStudentAndModifyPeselNr(const int &IdxNr, const std::string &newPeselNr);
 
     size_t getCount() const {return Students_.size();};
     const std::vector<std::unique_ptr<Student>> &getFullList() const { return Students_; };

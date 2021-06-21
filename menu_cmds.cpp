@@ -182,7 +182,7 @@ void menu::add_command()
         };
     }
 
-    std::tuple<std::string, std::string, std::string, int, long int, Sex> tmpVars;
+    std::tuple<std::string, std::string, std::string, int, std::string, Sex> tmpVars;
 
     std::cout << "Procedure of addition new strudent open\n\n";
     std::cout << "Type firstname of new student: ";
@@ -230,7 +230,7 @@ void menu::add_command()
         std::cout << "Add procedure failed! - Wrong PESEL number. \n";
         return;
     };
-    std::get<4>(tmpVars) = std::stoll(tmpVar);
+    std::get<4>(tmpVars) = tmpVar;
 
     std::cout << "Type sex of new student (try: f / m): ";
     std::getline(std::cin, tmpVar);
@@ -288,7 +288,7 @@ void menu::find_command()
                 return;
             };
 
-            searchAndShow(std::stoll(tmpVar));
+            searchAndShow_Pesel(tmpVar);
             return;
         };
 
@@ -307,7 +307,7 @@ void menu::find_command()
                 return;
             };
 
-            searchAndShow(tmpVar);
+            searchAndShow_Lastname(tmpVar);
             return;
         };
     };
@@ -450,7 +450,7 @@ void menu::generate_command()
 
     for (auto &person : dbManager_.getFullList())
     {
-        tmpHTML.push_back("<tr><td>" + person->getFirstname() + "</td><td>" + person->getLastname() + "</td><td>" + person->getAddress() + "</td><td>" + std::to_string(person->getIndexNr()) + "</td><td>" + std::to_string(person->getPeselNr()) + "</td><td>" + person->sexToString(person->getSex()) + "</td></tr>");
+        tmpHTML.push_back("<tr><td>" + person->getFirstname() + "</td><td>" + person->getLastname() + "</td><td>" + person->getAddress() + "</td><td>" + std::to_string(person->getIndexNr()) + "</td><td>" + person->getPeselNr()+ "</td><td>" + person->sexToString(person->getSex()) + "</td></tr>");
                 std::cout
             << std::endl;
     };
