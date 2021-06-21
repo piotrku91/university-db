@@ -16,8 +16,11 @@ https://www.youtube.com/watch?v=JFIHc3mh8-E
 ![Screenshot](screenshots/test2.png)
 
 
-##How to compile and run
->   cd build
+## How to compile and run
+
+>   Type:
+
+    cd build
     cmake ..
     make
     ./university-db (for app)
