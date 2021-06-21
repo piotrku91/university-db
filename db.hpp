@@ -21,7 +21,7 @@ public: // Setters / main operations
     ErrorCheck addStudent(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const long int peselNr, const Sex sexType);
     ErrorCheck checkIdxAndPeselUnique(const int& IdxNr,const long int& PeselNr, Sex sexType);
     bool deleteByIndexNr(const int &IdxNr);
-    bool peselValidator(const long int& PeselNr, Sex sexType); // TO IMPLEMENT - for now pass everything
+    bool peselValidator(const long int& PeselNr, Sex sexType); 
     std::vector<std::unique_ptr<Student>*> sortByLastNameTemporary(Order O=Order::Asc);
     std::vector<std::unique_ptr<Student>*> sortByPeselTemporary(Order O=Order::Asc);
     void sortByLastName(Order O=Order::Asc);

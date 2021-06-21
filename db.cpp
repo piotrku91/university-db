@@ -299,6 +299,7 @@ bool db::loadFromFile(const std::string &filename)
     {
         return false;
     };
+    eraseDatabase();
     size_t Counter = 0;
     size_t tmpSizeVar = 0;
 
