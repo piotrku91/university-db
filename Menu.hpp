@@ -9,17 +9,19 @@
 #include <iomanip>
 #include <tuple>
 #include "stdlib.h"
-#include "db.hpp"
+#include "Db.hpp"
 
-class menu
+
+class Menu
 {
 private:
-    db &dbManager_;
+    Db &dbManager_;
 
+    std::string appVersion_;
     std::string UserCommand_;
     std::vector<std::string> CommandArgs_;
     bool Exit_{false};
-    std::vector<std::string> m_CommandArgs;
+    
 
     std::map<std::string, std::function<void()>> MapCommands_{
         {"add", [this]()
@@ -32,19 +34,23 @@ private:
          { sortdb_command(); }},
         {"find", [this]()
          { find_command(); }},
-
+        {"erasedb", [this]()
+         { erasedb_command(); }},
         {"delete", [this]()
          { delete_command(); }},
         {"save", [this]()
          { save_command(); }},
         {"load", [this]()
          { load_command(); }},
+         {"info", [this]()
+         { std::cout << "piotrq university-db v." << appVersion_ << " | Last compile: "<< __TIME__; }},
          {"generate", [this]()
          { generate_command(); }},
         {"clear", [this]()
          { clear_command(); }},
         {"exit", [this]()
          { Exit_ = true; }}};
+         
 
 public:
     // Main functions to communication with database
@@ -81,6 +87,7 @@ public:
     void save_command();
     void load_command();
     void generate_command();
+    void erasedb_command();
 
-    menu(db &dbManager) : dbManager_(dbManager){};
+    Menu(Db &dbManager, const char* appVersion) : dbManager_{dbManager},appVersion_(appVersion){};
 };

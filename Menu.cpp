@@ -1,6 +1,6 @@
-#include "menu.hpp"
+#include "Menu.hpp"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
+void Menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
 {
     switch (dbManager_.addStudent(firstName, lastName, address, indexNr, peselNr, sexType))
     {
@@ -37,7 +37,7 @@ void menu::addNewUser(const std::string &firstName, const std::string &lastName,
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::searchAndShow_Lastname(const std::string &lastName)
+void Menu::searchAndShow_Lastname(const std::string &lastName)
 {
     auto found = dbManager_.findStudentByLastName_Linear(lastName);
 
@@ -56,7 +56,7 @@ void menu::searchAndShow_Lastname(const std::string &lastName)
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::searchAndShow_Pesel(const std::string &PeselNr)
+void Menu::searchAndShow_Pesel(const std::string &PeselNr)
 {
     auto found = dbManager_.findStudentByPesel_Binary(PeselNr);
 
@@ -76,9 +76,9 @@ void menu::searchAndShow_Pesel(const std::string &PeselNr)
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::deleteUser(const int &IndexNr)
+void Menu::deleteUser(const int& indexNr)
 {
-    if (dbManager_.deleteByIndexNr(IndexNr))
+    if (dbManager_.deleteByIndexNr(indexNr))
     {
         std::cout << "SUCCESS! Student removed from database.";
     }
@@ -89,7 +89,7 @@ void menu::deleteUser(const int &IndexNr)
     std::cout << "\n";
 }
 
-void menu::showStudent(const std::unique_ptr<Student> &person)
+void Menu::showStudent(const std::unique_ptr<Student> &person)
 {
     std::cout << std::left;
     std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << person->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";
@@ -97,7 +97,7 @@ void menu::showStudent(const std::unique_ptr<Student> &person)
     // std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
 }
 
-void menu::showDb()
+void Menu::showDb()
 {
     Display_prepareHeaderCaption("ORIGINAL VIEW OF STUDENTS DATABASE");
     Display_prepareHeader();
@@ -110,7 +110,7 @@ void menu::showDb()
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::showDbView_Pesel(Order O)
+void Menu::showDbView_Pesel(Order O)
 {
     Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
     Display_prepareHeader();
@@ -123,7 +123,7 @@ void menu::showDbView_Pesel(Order O)
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::showDbView_LastName(Order O)
+void Menu::showDbView_LastName(Order O)
 {
 
     Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
@@ -137,7 +137,7 @@ void menu::showDbView_LastName(Order O)
     std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::string menu::getOrderString(Order O)
+std::string Menu::getOrderString(Order O)
 {
     if (O == Order::Asc)
     {
@@ -147,7 +147,7 @@ std::string menu::getOrderString(Order O)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::tokenize(const std::string &t_UserCommand, const char t_Delim, std::vector<std::string> &t_Args)
+void Menu::tokenize(const std::string &t_UserCommand, const char t_Delim, std::vector<std::string> &t_Args)
 {
     size_t start;
     size_t end{0};
@@ -159,14 +159,14 @@ void menu::tokenize(const std::string &t_UserCommand, const char t_Delim, std::v
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::mainLoop()
+void Menu::mainLoop()
 {
     clear_command();
     while (!Exit_)
     {
 
         std::cout << "\n--------------------------------------------------------------------------------------------------" << std::endl;
-        std::cout << "piotrq university-db | Type command to execute: " << std::endl;
+        std::cout << "piotrq university-db v." << appVersion_ << " | Type command to execute: " << std::endl;
         CommandArgs_.clear();
         UserCommand_.clear();
 
@@ -185,7 +185,7 @@ void menu::mainLoop()
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::Display_prepareHeaderCaption(const std::string &Text)
+void Menu::Display_prepareHeaderCaption(const std::string &Text)
 {
     std::cout << std::left;
     std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
@@ -198,7 +198,7 @@ void menu::Display_prepareHeaderCaption(const std::string &Text)
     std::cout << "\n";
 }
 
-void menu::Display_prepareHeader()
+void Menu::Display_prepareHeader()
 {
     std::cout << std::left;
     std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
@@ -221,7 +221,7 @@ void menu::Display_prepareHeader()
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void menu::Display_prepareFooter(const std::string &Text)
+void Menu::Display_prepareFooter(const std::string &Text)
 {
 
     std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
@@ -238,7 +238,7 @@ void menu::Display_prepareFooter(const std::string &Text)
     std::cout << "+\n";
 }
 
-bool menu::readFileToVector(std::string filename, std::vector<std::string> &content)
+bool Menu::readFileToVector(std::string filename, std::vector<std::string> &content)
 {
     std::ifstream input(filename.c_str());
     std::string linestr;
@@ -253,7 +253,7 @@ bool menu::readFileToVector(std::string filename, std::vector<std::string> &cont
     return true;
 }
 
-bool menu::saveVectorToFile(std::string filename, std::vector<std::string> &content)
+bool Menu::saveVectorToFile(std::string filename, std::vector<std::string> &content)
 {
 
     std::ofstream OutFile(filename);

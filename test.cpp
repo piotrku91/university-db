@@ -1,8 +1,8 @@
 #include <vector>
 #include "gtest/gtest.h"
-#include "db.hpp"
+#include "Db.hpp"
 
-db dbManager(false);
+Db dbManager(false);
 
 TEST(MainOperations, ShouldAddNewStudent)
 {
@@ -146,22 +146,22 @@ TEST(MainOperations, ShouldModify)
     EXPECT_EQ(dbManager.getFullList().front()->getAddress(), "Wuja 22");
     EXPECT_EQ(dbManager.findStudentAndModifyAddress(dbManager.getFullList().front()->getIndexNr(), "Luny 134"), ErrorCheck::OK);
 
-    EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findStudentAndModifyindexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 
-    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findStudentAndModifypeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "49081828686");
 }
 
 TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
 {
-    EXPECT_EQ(dbManager.findStudentAndModifyIndexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::IndexInUse);
+    EXPECT_EQ(dbManager.findStudentAndModifyindexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::IndexInUse);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 }
 
 TEST(MainOperations, ShouldNotModifyPeselWhenIsDuplicate)
 {
-    EXPECT_EQ(dbManager.findStudentAndModifyPeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::PeselInUse);
+    EXPECT_EQ(dbManager.findStudentAndModifypeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::PeselInUse);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "49081828686");
 }
 

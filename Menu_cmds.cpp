@@ -1,6 +1,6 @@
-#include "menu.hpp"
+#include "Menu.hpp"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::help_command()
+void Menu::help_command()
 {
     std::cout << " Available commands to use in database:\n";
 
@@ -11,7 +11,7 @@ void menu::help_command()
     std::cout << "\nType: [command] help to get help of specify command. Example: showdb help";
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::showdb_command()
+void Menu::showdb_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -86,7 +86,7 @@ void menu::showdb_command()
     return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::sortdb_command()
+void Menu::sortdb_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -165,7 +165,7 @@ void menu::sortdb_command()
     return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::add_command()
+void Menu::add_command()
 {
     if ((CommandArgs_.size() > 1) && (CommandArgs_.size() < 6))
     {
@@ -248,7 +248,7 @@ void menu::add_command()
     return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void menu::find_command()
+void Menu::find_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -315,7 +315,7 @@ void menu::find_command()
     return;
 }
 
-void menu::delete_command()
+void Menu::delete_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -355,7 +355,7 @@ void menu::delete_command()
     return;
 }
 
-void menu::save_command()
+void Menu::save_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -394,7 +394,7 @@ void menu::save_command()
     return;
 }
 
-void menu::load_command()
+void Menu::load_command()
 {
     if (CommandArgs_.size() == 1) // simple showdb command
     {
@@ -433,16 +433,18 @@ void menu::load_command()
     return;
 }
 
-void menu::clear_command()
+void Menu::clear_command()
 {
     if (system("clear"))
     {
     } // Clear console
 }
 
-void menu::generate_command()
-{
-    std::cout << "\nExporting database to HTML file.\n";
+void Menu::generate_command()
+{ 
+     if (CommandArgs_.size() == 1) // simple showdb command
+    {
+  std::cout << "\nExporting database to HTML file.\n";
     std::vector<std::string> tmpHTML;
     if (dbManager_.getFullList().empty()) {std::cout << "\nDatabase is empty! Nothing to generate\n"; return;};
 
@@ -457,4 +459,33 @@ void menu::generate_command()
 
     readFileToVector("templates/html2", tmpHTML);
     if (saveVectorToFile("generated.html",tmpHTML)) {std::cout << "\nDone.\n";} else {;std::cout << "\nError.\n";};
+return;
+    };
+      if (CommandArgs_.at(1) == "help")
+    {
+        std::cout << "generate - Generate HTML file with all records from database.\n"
+                  << "Example: generate\n\n";
+                  return;
+    };
+
+  
+}
+
+
+void Menu::erasedb_command()
+{
+      if (CommandArgs_.size() == 1) // simple showdb command
+    {
+        dbManager_.eraseDatabase();
+        std::cout << "Database erased.\n";
+                  
+    return;
+    };
+       if (CommandArgs_.at(1) == "help")
+    {
+        std::cout << "erasedb - Delete all records from database.\n"
+                  << "Example: erasedb\n\n";
+                  return;
+    };
+
 }

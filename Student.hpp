@@ -2,7 +2,6 @@
 #include <string>
 #include "enums.hpp"
 
-
 class Student
 {
 private:
@@ -23,16 +22,22 @@ public:
     Sex getSex() const { return sexType_; };
 
     // Setters
-    void setFirstname(const std::string &firstName) { firstname_ = firstName; };
-    void setLastname(const std::string &lastName) { lastname_ = lastName; };
-    void setAddress(const std::string &address) { address_ = address; };
-    void setIndexNr(const int &indexNr) { indexNr_ = indexNr; }; // Be careful - after use this function db should rebuild indexes
-    void setPeselNr(const std::string &peselNr) { peselNr_ = peselNr; }; // Be careful - after use this function db should rebuild indexes
+    void setFirstname(const std::string& firstname) { firstname_ = firstname; };
+    void setLastname(const std::string& lastname) { lastname_ = lastname; };
+    void setAddress(const std::string& address) { address_ = address; };
+    void setindexNr(const int& indexNr) { indexNr_ = indexNr; }; // Be careful - after use this function db should rebuild indexes
+    void setpeselNr(const std::string& peselNr) { peselNr_ = peselNr; }; // Be careful - after use this function db should rebuild indexes
 
     std::string sexToString(Sex sexType) { return (sexType == Sex::Male) ? "Male" : "Female"; };
 
    
-
-    Student(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType) // c - tor
-        : firstname_(firstName), lastname_(lastName), address_(address), indexNr_(indexNr), peselNr_(peselNr), sexType_(sexType){};
+    // c - tor
+    Student(const std::string &firstname, const std::string &lastname, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType) // c - tor
+        : firstname_{firstname}
+        , lastname_{lastname}
+        , address_{address}
+        , indexNr_{indexNr}
+        , peselNr_{peselNr}
+        , sexType_{sexType}
+        {};
 };

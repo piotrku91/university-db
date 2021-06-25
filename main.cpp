@@ -6,13 +6,14 @@ Function tokenize() from our another project: Piotr R (https://github.com/Rogal2
 
 */
 
-
 #include <iostream>
-#include "menu.hpp"
+#include "Menu.hpp"
+
+constexpr auto VERSION = "0.12";
 
 int main()
 {
-   db dbManager;
-   menu mainMenu(dbManager);
+   Db dbManager;
+   Menu mainMenu(dbManager,VERSION);
    mainMenu.run();
 }

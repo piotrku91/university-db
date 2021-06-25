@@ -40,9 +40,9 @@ add_compile_options(-Wall -Wextra -Werror -Wconversion -pedantic -pedantic-error
 project(university-db)
 enable_testing()
 
-add_executable(${PROJECT_NAME} main.cpp db.cpp menu.cpp menu_cmds.cpp)
+add_executable(${PROJECT_NAME} main.cpp Db.cpp Menu.cpp Menu_cmds.cpp)
 
-add_executable(${PROJECT_NAME}-ut test.cpp db.cpp)
+add_executable(${PROJECT_NAME}-ut test.cpp Db.cpp)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 add_test(NAME university-db_test COMMAND ${PROJECT_NAME}-ut)
