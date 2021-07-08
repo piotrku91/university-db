@@ -19,6 +19,8 @@ private:
 
 public: // Setters / main operations
     ErrorCheck addStudent(const std::string& firstname, const std::string& lastname, const std::string& address, const int indexNr, const std::string& peselNr, const Sex sexType);
+    ErrorCheck checkPeselUnique(const std::string &peselNr, Sex sexType);
+    ErrorCheck checkIdxUnique(const int &indexNr);
     ErrorCheck checkIdxAndPeselUnique(const int& indexNr,const std::string& peselNr, Sex sexType);
     bool deleteByIndexNr(const int& indexNr);
     bool peselValidator(const std::string& peselNr, Sex sexType); 

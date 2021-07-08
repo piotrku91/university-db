@@ -122,7 +122,13 @@ bool Db::deleteByIndexNr(const int &indexNr)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck Db::checkIdxAndPeselUnique(const int &indexNr, const std::string &peselNr, Sex sexType)
 {
-
+    if (checkPeselUnique(peselNr,sexType)==ErrorCheck::PeselInUse) {return ErrorCheck::PeselInUse;};
+    if (checkIdxUnique(indexNr)==ErrorCheck::IndexInUse) {return ErrorCheck::IndexInUse;};
+    return ErrorCheck::OK;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck Db::checkPeselUnique(const std::string &peselNr, Sex sexType)
+{
     if (Students_.empty())
     {
         return ErrorCheck::OK;
@@ -137,7 +143,16 @@ ErrorCheck Db::checkIdxAndPeselUnique(const int &indexNr, const std::string &pes
     {
         return ErrorCheck::PeselInUse;
     }
-
+    return ErrorCheck::OK;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck Db::checkIdxUnique(const int &indexNr)
+{
+    if (Students_.empty())
+    {
+        return ErrorCheck::OK;
+    };
+   
     if (findStudentByIdx_Binary(indexNr))
     {
         return ErrorCheck::IndexInUse;
