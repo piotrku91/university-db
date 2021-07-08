@@ -54,11 +54,11 @@ private:
 
 public:
     // Main functions to communication with database
-    void addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType);
+    void addNewUser(PersonType type, const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType);
     void deleteUser(const int &IndexNr);
     void searchAndShow_Lastname(const std::string &lastName);
     void searchAndShow_Pesel(const std::string &PeselNr);
-    void showStudent(const std::unique_ptr<Student> &person);
+    void showStudent(const std::unique_ptr<Person> &person);
     void showDb();
     void showDbView_Pesel(Order O = Order::Asc);
     void showDbView_LastName(Order O = Order::Asc);

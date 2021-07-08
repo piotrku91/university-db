@@ -7,7 +7,7 @@ Db dbManager(false);
 TEST(MainOperations, ShouldAddNewStudent)
 {
     EXPECT_EQ(dbManager.getCount(), 0);               
-    dbManager.addStudent("Roman", "Szpicruta", "Durnia 50", 29481, "90121464913", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Roman", "Szpicruta", "Durnia 50", 29481, "90121464913", Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 1);
 }
 
@@ -25,26 +25,26 @@ TEST(MainOperations, ShouldAddNewStudentValid)
 TEST(MainOperations, ShouldAddMoreStudents)
 {
     EXPECT_EQ(dbManager.getCount(), 1);
-    dbManager.addStudent("Anna", "Torbisko", "Flaszki 1", 29222, "87070462648", Sex::Female);
-    dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, "92121377633", Sex::Male);
-    dbManager.addStudent("Danka", "Koziol", "Wuja 22", 20128, "54022845648", Sex::Female);
-    dbManager.addStudent("Jurek", "Znicz", "Luny 222", 10128, "66011781239", Sex::Male);
-    dbManager.addStudent("Zenobiusz", "Gorizek", "Stefana 232", 10127, "95042936259", Sex::Male);
-    dbManager.addStudent("Piotr", "Ameba", "Stefana 232", 17127, "67051489435", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Anna", "Torbisko", "Flaszki 1", 29222, "87070462648", Sex::Female);
+    dbManager.addPerson(PersonType::Student,"Tomek", "Kola", "Janka 2", 29121, "92121377633", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Danka", "Koziol", "Wuja 22", 20128, "54022845648", Sex::Female);
+    dbManager.addPerson(PersonType::Student,"Jurek", "Znicz", "Luny 222", 10128, "66011781239", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Zenobiusz", "Gorizek", "Stefana 232", 10127, "95042936259", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Piotr", "Ameba", "Stefana 232", 17127, "67051489435", Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
 TEST(MainOperations, ShouldANotAddDuplicatesIndex)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
-    EXPECT_EQ(dbManager.addStudent("Tomek", "Kola", "Janka 2", 29121, "49032157276", Sex::Male), ErrorCheck::IndexInUse);
+    EXPECT_EQ(dbManager.addPerson(PersonType::Student,"Tomek", "Kola", "Janka 2", 29121, "49032157276", Sex::Male), ErrorCheck::IndexInUse);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 
 TEST(MainOperations, ShouldANotAddDuplicatesPesel)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
-    dbManager.addStudent("Tomek", "Kola", "Janka 2", 21123, "92121377633", Sex::Male);
+    dbManager.addPerson(PersonType::Student,"Tomek", "Kola", "Janka 2", 21123, "92121377633", Sex::Male);
     EXPECT_EQ(dbManager.getCount(), 7);
 }
 

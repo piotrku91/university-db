@@ -1,4 +1,12 @@
 #pragma once
+
+enum class PersonType
+{
+Student,
+Worker
+};
+
+
 enum class ErrorCheck
 {
 IndexInUse,

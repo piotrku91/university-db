@@ -2,14 +2,20 @@
 #include <algorithm>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck Db::addStudent(const std::string& firstname, const std::string& lastname, const std::string& address, const int indexNr, const std::string& peselNr, const Sex sexType)
+ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const std::string& lastname, const std::string& address, const int indexNr, const std::string& peselNr, const Sex sexType, const int Salary)
 {
-    switch (checkIdxAndPeselUnique(indexNr, peselNr, sexType))
+    switch ( (type==PersonType::Student)?(checkIdxAndPeselUnique(indexNr, peselNr, sexType)) : (checkPeselUnique(peselNr, sexType)))
     {
     case ErrorCheck::OK:
     {
-        Students_.push_back(std::make_unique<Student>(Student{firstname, lastname, address, indexNr, peselNr, sexType}));
+        if (type==PersonType::Student) {
+        Students_.push_back(std::make_unique<Person>(Student{firstname, lastname, address, indexNr, peselNr, sexType}));
         rebuildIndex();
+        };
+         if (type==PersonType::Worker) {
+        Students_.push_back(std::make_unique<Person>(Worker{firstname, lastname, address, peselNr, sexType, Salary}));
+        rebuildIndex();
+        };
         return ErrorCheck::OK;
         break;
     }
@@ -36,9 +42,9 @@ ErrorCheck Db::addStudent(const std::string& firstname, const std::string& lastn
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *Db::findStudentByLastName_Linear(const std::string &lastname)
+std::unique_ptr<Person> *Db::findStudentByLastName_Linear(const std::string &lastname)
 {
-    auto it = (std::find_if(Students_.begin(), Students_.end(), [&lastname](std::unique_ptr<Student> &student_ptr)
+    auto it = (std::find_if(Students_.begin(), Students_.end(), [&lastname](std::unique_ptr<Person> &student_ptr)
                             {
                                 if (student_ptr->getLastname() == lastname)
                                 {
@@ -56,9 +62,9 @@ std::unique_ptr<Student> *Db::findStudentByLastName_Linear(const std::string &la
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *Db::findStudentByPesel_Linear(const std::string &peselNr)
+std::unique_ptr<Person> *Db::findStudentByPesel_Linear(const std::string &peselNr)
 {
-    auto it = (std::find_if(Students_.begin(), Students_.end(), [&peselNr](std::unique_ptr<Student> &student_ptr)
+    auto it = (std::find_if(Students_.begin(), Students_.end(), [&peselNr](std::unique_ptr<Person> &student_ptr)
                             {
                                 if (student_ptr->getPeselNr() == peselNr)
                                 {
@@ -76,7 +82,7 @@ std::unique_ptr<Student> *Db::findStudentByPesel_Linear(const std::string &pesel
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *Db::findStudentByPesel_Binary(const std::string &peselNr)
+std::unique_ptr<Person> *Db::findStudentByPesel_Binary(const std::string &peselNr)
 {
     auto it = (IndexOfStudentPesels_.find(peselNr));
 
@@ -90,7 +96,7 @@ std::unique_ptr<Student> *Db::findStudentByPesel_Binary(const std::string &pesel
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Student> *Db::findStudentByIdx_Binary(const int &indexNr)
+std::unique_ptr<Person> *Db::findStudentByIdx_Binary(const int &indexNr)
 {
     auto it = (IndexOfStudentIdxs_.find(indexNr));
 
@@ -166,7 +172,7 @@ void Db::sortByLastName(Order O)
     {
         return;
     };
-    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &student_ptr1, std::unique_ptr<Student> &student_ptr2)
+    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
               {
                   if (std::lexicographical_compare(student_ptr1->getLastname().begin(), student_ptr1->getLastname().end(), student_ptr2->getLastname().begin(), student_ptr2->getLastname().end()))
                   {
@@ -185,7 +191,7 @@ void Db::sortByPesel(Order O)
         return;
     };
 
-    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Student> &student_ptr1, std::unique_ptr<Student> &student_ptr2)
+    std::sort(Students_.begin(), Students_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
               {
                   if (student_ptr1->getPeselNr() < student_ptr2->getPeselNr())
                   {
@@ -196,10 +202,10 @@ void Db::sortByPesel(Order O)
     rebuildIndex();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<std::unique_ptr<Student> *> Db::sortByLastNameTemporary(Order O)
+std::vector<std::unique_ptr<Person> *> Db::sortByLastNameTemporary(Order O)
 {
 
-    std::vector<std::unique_ptr<Student> *> tmpSortedList;
+    std::vector<std::unique_ptr<Person> *> tmpSortedList;
 
     if (Students_.empty())
     {
@@ -211,7 +217,7 @@ std::vector<std::unique_ptr<Student> *> Db::sortByLastNameTemporary(Order O)
         tmpSortedList.push_back(&OneStudent);
     };
 
-    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> *student_ptr1, std::unique_ptr<Student> *student_ptr2)
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Person> *student_ptr1, std::unique_ptr<Person> *student_ptr2)
               {
                   if (std::lexicographical_compare(student_ptr1->get()->getLastname().begin(), student_ptr1->get()->getLastname().end(), student_ptr2->get()->getLastname().begin(), student_ptr2->get()->getLastname().end()))
                   {
@@ -223,9 +229,9 @@ std::vector<std::unique_ptr<Student> *> Db::sortByLastNameTemporary(Order O)
     return tmpSortedList;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<std::unique_ptr<Student> *> Db::sortByPeselTemporary(Order O)
+std::vector<std::unique_ptr<Person> *> Db::sortByPeselTemporary(Order O)
 {
-    std::vector<std::unique_ptr<Student> *> tmpSortedList;
+    std::vector<std::unique_ptr<Person> *> tmpSortedList;
 
     if (Students_.empty())
     {
@@ -237,7 +243,7 @@ std::vector<std::unique_ptr<Student> *> Db::sortByPeselTemporary(Order O)
         tmpSortedList.push_back(&OneStudent);
     };
 
-    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Student> *student_ptr1, std::unique_ptr<Student> *student_ptr2)
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Person> *student_ptr1, std::unique_ptr<Person> *student_ptr2)
               {
                   if (student_ptr1->get()->getPeselNr() < student_ptr2->get()->getPeselNr())
                   {
@@ -257,7 +263,7 @@ void Db::rebuildIndex()
         return;
     for (auto &OneStudent : Students_)
     {
-        IndexOfStudentIdxs_.insert({OneStudent->getIndexNr(), &OneStudent});
+        if (OneStudent->getIndexNr()) {IndexOfStudentIdxs_.insert({OneStudent->getIndexNr(), &OneStudent});};
         IndexOfStudentPesels_.insert({OneStudent->getPeselNr(), &OneStudent});
     }
 }
@@ -354,7 +360,7 @@ bool Db::loadFromFile(const std::string &filename)
         fileObject.read(reinterpret_cast<char*>(&sexTmp), sizeof(sexTmp));
 
         // Add new student
-        addStudent(firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNr, peselNrTmp.get(), sexTmp);
+        addPerson(PersonType::Student,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNr, peselNrTmp.get(), sexTmp);
     }
     fileObject.close();
     return true;

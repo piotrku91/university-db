@@ -1,12 +1,12 @@
 #include "Menu.hpp"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Menu::addNewUser(const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
+void Menu::addNewUser(PersonType type, const std::string &firstName, const std::string &lastName, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType)
 {
-    switch (dbManager_.addStudent(firstName, lastName, address, indexNr, peselNr, sexType))
+    switch (dbManager_.addPerson(type, firstName, lastName, address, indexNr, peselNr, sexType))
     {
     case ErrorCheck::OK:
     {
-        std::cout << "SUCCESS! - Student added to database. \n";
+        std::cout << "SUCCESS! - Person added to database. \n";
         break;
     }
     case ErrorCheck::IndexInUse:
@@ -89,7 +89,7 @@ void Menu::deleteUser(const int& indexNr)
     std::cout << "\n";
 }
 
-void Menu::showStudent(const std::unique_ptr<Student> &person)
+void Menu::showStudent(const std::unique_ptr<Person> &person)
 {
     std::cout << std::left;
     std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << person->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";

@@ -242,7 +242,7 @@ void Menu::add_command()
     std::get<5>(tmpVars) = (tmpVar == "f") ? Sex::Female : Sex::Male;
 
     std::cout << "Attempt to add student to database... ";
-    addNewUser(std::get<0>(tmpVars), std::get<1>(tmpVars), std::get<2>(tmpVars), std::get<3>(tmpVars), std::get<4>(tmpVars), std::get<5>(tmpVars));
+    addNewUser(PersonType::Student,std::get<0>(tmpVars), std::get<1>(tmpVars), std::get<2>(tmpVars), std::get<3>(tmpVars), std::get<4>(tmpVars), std::get<5>(tmpVars));
     // std::apply(dbmanager_.addStudent,tmpVars);
     std::cout << "";
     return;
