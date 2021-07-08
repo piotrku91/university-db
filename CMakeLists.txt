@@ -45,4 +45,4 @@ add_executable(${PROJECT_NAME} main.cpp Db.cpp Menu.cpp Menu_cmds.cpp)
 add_executable(${PROJECT_NAME}-ut test.cpp Db.cpp)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
-add_test(NAME university-db_test COMMAND ${PROJECT_NAME}-ut)
+add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
