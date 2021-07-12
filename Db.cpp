@@ -9,11 +9,11 @@ ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const st
     case ErrorCheck::OK:
     {
         if (type==PersonType::Student) {
-        Students_.push_back(std::make_unique<Person>(Student{firstname, lastname, address, indexNr, peselNr, sexType}));
+        Students_.push_back(std::make_unique<Student>(Student{firstname, lastname, address, indexNr, peselNr, sexType}));
         rebuildIndex();
         };
          if (type==PersonType::Worker) {
-        Students_.push_back(std::make_unique<Person>(Worker{firstname, lastname, address, peselNr, sexType, Salary}));
+        Students_.push_back(std::make_unique<Worker>(Worker{firstname, lastname, address, peselNr, sexType, Salary}));
         rebuildIndex();
         };
         return ErrorCheck::OK;
