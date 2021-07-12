@@ -127,9 +127,13 @@ bool Db::deleteByIndexNr(const int &indexNr)
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck Db::checkIdxAndPeselUnique(const int &indexNr, const std::string &peselNr, Sex sexType)
-{
-    if (checkPeselUnique(peselNr,sexType)==ErrorCheck::PeselInUse) {return ErrorCheck::PeselInUse;};
-    if (checkIdxUnique(indexNr)==ErrorCheck::IndexInUse) {return ErrorCheck::IndexInUse;};
+{   
+    ErrorCheck peselTest=checkPeselUnique(peselNr,sexType);
+    ErrorCheck indexTest=checkIdxUnique(indexNr);
+
+    if (peselTest!=ErrorCheck::OK) {return peselTest;};
+    if (indexTest!=ErrorCheck::OK) {return indexTest;};
+    
     return ErrorCheck::OK;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -261,6 +265,7 @@ void Db::rebuildIndex()
     IndexOfStudentPesels_.clear();
     if (Students_.empty())
         return;
+
     for (auto &OneStudent : Students_)
     {
         if (OneStudent->getIndexNr()) {IndexOfStudentIdxs_.insert({OneStudent->getIndexNr(), &OneStudent});};
@@ -308,6 +313,10 @@ bool Db::saveToFile(const std::string &filename)
 
         // Save sex
         tmpSizeVar2 = static_cast<int>(OneStudent->getSex());
+        fileObject.write(reinterpret_cast<char*>(&tmpSizeVar2), sizeof(tmpSizeVar2));
+
+        // Save person type
+        tmpSizeVar2 = static_cast<int>(OneStudent->getPersonType());
         fileObject.write(reinterpret_cast<char*>(&tmpSizeVar2), sizeof(tmpSizeVar2));
     }
     fileObject.close();
@@ -359,8 +368,12 @@ bool Db::loadFromFile(const std::string &filename)
         Sex sexTmp;
         fileObject.read(reinterpret_cast<char*>(&sexTmp), sizeof(sexTmp));
 
+        //  Read personType_
+        PersonType personTypeTmp;
+       fileObject.read(reinterpret_cast<char*>(&personTypeTmp), sizeof(personTypeTmp));
+
         // Add new student
-        addPerson(PersonType::Student,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNr, peselNrTmp.get(), sexTmp);
+        addPerson(personTypeTmp,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNr, peselNrTmp.get(), sexTmp);
     }
     fileObject.close();
     return true;

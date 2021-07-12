@@ -2,7 +2,7 @@
 #include <string>
 #include "enums.hpp"
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Person
 {
 private:
@@ -43,6 +43,7 @@ public:
         , sexType_{sexType}
         {};
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Student: public Person
 {
@@ -55,14 +56,14 @@ int getIndexNr() const override { return indexNr_; };
 
 PersonType getPersonType() const override {return PersonType::Student;};
 
-
+// c -tor
 Student(const std::string &firstname, const std::string &lastname, const std::string &address, const int indexNr, const std::string peselNr, const Sex sexType) // c - tor
         : Person(firstname,lastname,address,peselNr,sexType)
         , indexNr_{indexNr}
      {};
     
 };
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Worker: public Person
 {
@@ -71,10 +72,16 @@ int Salary_;
 
 public:
 PersonType getPersonType() const override {return PersonType::Worker;};
+void getSalary(int newSalary) {Salary_=newSalary;};
+int getSalary() const  {return Salary_;};
 
+
+
+// c -tor
 Worker(const std::string &firstname, const std::string &lastname, const std::string &address, const std::string peselNr, const Sex sexType, const int salary) // c - tor
         : Person(firstname,lastname,address,peselNr,sexType)
         , Salary_{salary}
      {};
 
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
