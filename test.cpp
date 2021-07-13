@@ -50,7 +50,7 @@ TEST(MainOperations, ShouldANotAddDuplicatesPesel)
 
 TEST(MainOperations, ShouldFindByLastName)
 {
-    auto found = dbManager.findStudentByLastName_Linear("Znicz");
+    auto found = dbManager.findPersonByLastName_Linear("Znicz");
     EXPECT_TRUE(found);
 
     if (found)
@@ -66,13 +66,13 @@ TEST(MainOperations, ShouldFindByLastName)
 
 TEST(MainOperations, ShouldNotFindByLastName)
 {
-    auto found = dbManager.findStudentByLastName_Linear("Bandzior");
+    auto found = dbManager.findPersonByLastName_Linear("Bandzior");
     EXPECT_EQ(found, nullptr);
 }
 
 TEST(MainOperations, ShouldFindByPesel)
 {
-    auto found = dbManager.findStudentByPesel_Binary("66011781239");
+    auto found = dbManager.findPersonByPesel_Binary("66011781239");
     EXPECT_TRUE(found);
 
     if (found)
@@ -88,16 +88,16 @@ TEST(MainOperations, ShouldFindByPesel)
 
 TEST(MainOperations, ShouldNotFindByPesel)
 {
-    auto found = dbManager.findStudentByPesel_Binary("5454544544");
+    auto found = dbManager.findPersonByPesel_Binary("5454544544");
     EXPECT_EQ(found, nullptr);
 }
 
 TEST(MainOperations, ShouldDelete)
 {
     EXPECT_EQ(dbManager.getCount(), 7);
-    EXPECT_TRUE(dbManager.findStudentByIdx_Binary(10128));
+    EXPECT_TRUE(dbManager.findPersonByIdx_Binary(10128));
     EXPECT_TRUE(dbManager.deleteByIndexNr(10128));
-    EXPECT_FALSE(dbManager.findStudentByIdx_Binary(10128));
+    EXPECT_FALSE(dbManager.findPersonByIdx_Binary(10128));
     EXPECT_EQ(dbManager.getCount(), 6);
 }
 
@@ -136,32 +136,32 @@ TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile)
 TEST(MainOperations, ShouldModify)
 {
     EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danka");
-    EXPECT_EQ(dbManager.findStudentAndModifyFirstname(dbManager.getFullList().front()->getIndexNr(), "Danuta"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findPersonAndModifyFirstname(dbManager.getFullList().front()->getPeselNr(), "Danuta"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getFirstname(), "Danuta");
 
     EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Koziol");
-    EXPECT_EQ(dbManager.findStudentAndModifyLastname(dbManager.getFullList().front()->getIndexNr(), "Kozlowska"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findPersonAndModifyLastname(dbManager.getFullList().front()->getPeselNr(), "Kozlowska"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getLastname(), "Kozlowska");
 
     EXPECT_EQ(dbManager.getFullList().front()->getAddress(), "Wuja 22");
-    EXPECT_EQ(dbManager.findStudentAndModifyAddress(dbManager.getFullList().front()->getIndexNr(), "Luny 134"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findPersonAndModifyAddress(dbManager.getFullList().front()->getPeselNr(), "Luny 134"), ErrorCheck::OK);
 
-    EXPECT_EQ(dbManager.findStudentAndModifyindexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findPersonAndModifyindexNr(dbManager.getFullList().front()->getPeselNr(), 10000), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 
-    EXPECT_EQ(dbManager.findStudentAndModifypeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::OK);
+    EXPECT_EQ(dbManager.findPersonAndModifypeselNr(dbManager.getFullList().front()->getPeselNr(), "49081828686"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "49081828686");
 }
 
 TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
 {
-    EXPECT_EQ(dbManager.findStudentAndModifyindexNr(dbManager.getFullList().front()->getIndexNr(), 10000), ErrorCheck::IndexInUse);
+    EXPECT_EQ(dbManager.findPersonAndModifyindexNr(dbManager.getFullList().front()->getPeselNr(), 10000), ErrorCheck::IndexInUse);
     EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
 }
 
 TEST(MainOperations, ShouldNotModifyPeselWhenIsDuplicate)
 {
-    EXPECT_EQ(dbManager.findStudentAndModifypeselNr(dbManager.getFullList().front()->getIndexNr(), "49081828686"), ErrorCheck::PeselInUse);
+    EXPECT_EQ(dbManager.findPersonAndModifypeselNr(dbManager.getFullList().front()->getPeselNr(), "49081828686"), ErrorCheck::PeselInUse);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "49081828686");
 }
 

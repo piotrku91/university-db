@@ -9,7 +9,7 @@ Function tokenize() from our another project: Piotr R (https://github.com/Rogal2
 #include <iostream>
 #include "Menu.hpp"
 
-constexpr auto VERSION = "0.12";
+constexpr auto VERSION = "0.13";
 
 int main()
 {

@@ -39,7 +39,7 @@ void Menu::addNewUser(PersonType type, const std::string &firstName, const std::
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Menu::searchAndShow_Lastname(const std::string &lastName)
 {
-    auto found = dbManager_.findStudentByLastName_Linear(lastName);
+    auto found = dbManager_.findPersonByLastName_Linear(lastName);
 
     if (found)
     {
@@ -58,7 +58,7 @@ void Menu::searchAndShow_Lastname(const std::string &lastName)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Menu::searchAndShow_Pesel(const std::string &PeselNr)
 {
-    auto found = dbManager_.findStudentByPesel_Binary(PeselNr);
+    auto found = dbManager_.findPersonByPesel_Binary(PeselNr);
 
     if (found)
     {

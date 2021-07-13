@@ -3,7 +3,16 @@
 #include "enums.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class Person
+class funcToOverride
+{
+public:
+   virtual bool setindexNr(int indexNr) { if (indexNr) {return false;}; return false;};
+   virtual int getIndexNr() const  { return 0; };
+   virtual bool setSalary(int Salary) { if (Salary) {return false;}; return false;};
+   virtual int getSalary() const  { return 0; };
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class Person: public funcToOverride
 {
 private:
     std::string firstname_;
@@ -14,6 +23,12 @@ private:
     PersonType PersonType_;
 
 public:
+    template <typename T>
+    static std::unique_ptr<Person> createPerson(T&& Args) // Person factory function
+    {
+        return std::make_unique<T>(Args);
+    }
+
     // Getters
     std::string getFirstname() const { return firstname_; };
     std::string getLastname() const { return lastname_; };
@@ -23,8 +38,6 @@ public:
     Sex getSex() const { return sexType_; };
     virtual PersonType getPersonType() const = 0;
 
-   virtual bool setindexNr(int indexNr) { if (indexNr) {return false;}; return false;};
-   virtual int getIndexNr() const  { return 0; };
 
     // Setters
     void setFirstname(const std::string& firstname) { firstname_ = firstname; };
