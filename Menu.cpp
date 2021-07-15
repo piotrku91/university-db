@@ -92,7 +92,8 @@ void Menu::deleteUser(const int& indexNr)
 void Menu::showStudent(const std::unique_ptr<Person> &person)
 {
     std::cout << std::left;
-    std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << person->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";
+    auto student_ptr = Person::isTargetClassObject<Person,Student>(person.get());
+    std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << student_ptr->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";
 
     // std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
 }

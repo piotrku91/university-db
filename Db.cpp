@@ -216,7 +216,11 @@ void Db::sortBySalary(Order O)
 
     std::sort(Records_.begin(), Records_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
               {
-                  if (student_ptr1->getSalary() < student_ptr2->getSalary())
+                
+                   auto lhs = (Person::isTargetClassObject<Person,Worker>(student_ptr1.get()))?Person::isTargetClassObject<Person,Worker>(student_ptr1.get())->getSalary():0;
+                   auto rhs = (Person::isTargetClassObject<Person,Worker>(student_ptr2.get()))?Person::isTargetClassObject<Person,Worker>(student_ptr2.get())->getSalary():0;
+       
+                  if (lhs < rhs)
                   {
                       return (O == Order::Asc) ? true : false;
                   }
@@ -287,7 +291,8 @@ void Db::rebuildIndex()
 
     for (auto &onePerson : Records_)
     {
-        if (onePerson->getIndexNr()) {IndexOfStudentIdxs_.insert({onePerson->getIndexNr(), &onePerson});};
+        auto student_ptr = Person::isTargetClassObject<Person,Student>(onePerson.get());
+        if (student_ptr) {IndexOfStudentIdxs_.insert({student_ptr->getIndexNr(), &onePerson});};
         IndexOfPersonsPesels_.insert({onePerson->getPeselNr(), &onePerson});
     }
 }
@@ -322,7 +327,11 @@ bool Db::saveToFile(const std::string &filename)
         fileObject.write(reinterpret_cast<char*>(onePerson->getAddress().data()), sizeof(char) * tmpSizeVar);
 
         // Save int indexNr_
-        auto tmpSizeVar2 = onePerson->getIndexNr();
+        auto tmpSizeVar2 = 0;
+        auto student_ptr = Person::isTargetClassObject<Person,Student>(onePerson.get());
+        if (student_ptr) { tmpSizeVar2 = student_ptr->getIndexNr(); };
+        auto worker_ptr = Person::isTargetClassObject<Person,Worker>(onePerson.get());
+        if (worker_ptr) { tmpSizeVar2 = worker_ptr->getSalary(); };
         fileObject.write(reinterpret_cast<char*>(&tmpSizeVar2), sizeof(tmpSizeVar2));
 
          // Save string peselNr_
@@ -446,10 +455,13 @@ ErrorCheck Db::findPersonAndModifyindexNr(const std::string& peselNr, const int 
         {
             return ErrorCheck::IndexInUse;
         };
-
-        found->get()->setindexNr(newindexNr);
+        auto student_ptr = Person::isTargetClassObject<Person,Student>(found->get());
+        if (student_ptr) {
+        student_ptr->setindexNr(newindexNr);
         rebuildIndex();
         return ErrorCheck::OK;
+        };
+        
     }
     return ErrorCheck::NotFound;
 }

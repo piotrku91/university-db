@@ -3,16 +3,7 @@
 #include "enums.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class funcToOverride
-{
-public:
-   virtual bool setindexNr(int indexNr) { if (indexNr) {return false;}; return false;};
-   virtual int getIndexNr() const  { return 0; };
-   virtual bool setSalary(int Salary) { if (Salary) {return false;}; return false;};
-   virtual int getSalary() const  { return 0; };
-};
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class Person: public funcToOverride
+class Person
 {
 private:
     std::string firstname_;
@@ -20,14 +11,23 @@ private:
     std::string address_;
     std::string peselNr_;
     Sex sexType_;
-    PersonType PersonType_;
-
+    
 public:
     template <typename T>
     static std::unique_ptr<Person> createPerson(T&& Args) // Person factory function
     {
         return std::make_unique<T>(Args);
     }
+
+    template <typename T,typename T2> // Functions checks if object pointer is specify type of derived class object
+    static T2* isTargetClassObject(T* derivedClass)
+    {
+    T * test = derivedClass;
+    T2* cast_test = dynamic_cast<T2*>(test);
+    if (cast_test) {return cast_test;};
+    return nullptr;
+    }
+
 
     // Getters
     std::string getFirstname() const { return firstname_; };
@@ -64,8 +64,8 @@ private:
     int indexNr_;
 
 public:
-bool setindexNr(int indexNr) override { indexNr_ = indexNr; return true;};
-int getIndexNr() const override { return indexNr_; };
+bool setindexNr(int indexNr) { indexNr_ = indexNr; return true;};
+int getIndexNr() const { return indexNr_; };
 
 PersonType getPersonType() const override {return PersonType::Student;};
 

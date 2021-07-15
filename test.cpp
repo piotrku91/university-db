@@ -17,7 +17,7 @@ TEST(MainOperations, ShouldAddNewStudentValid)
     EXPECT_EQ(dbManager.getFullList()[0]->getFirstname(), "Roman");
     EXPECT_EQ(dbManager.getFullList()[0]->getLastname(), "Szpicruta");
     EXPECT_EQ(dbManager.getFullList()[0]->getAddress(), "Durnia 50");
-    EXPECT_EQ(dbManager.getFullList()[0]->getIndexNr(), 29481);
+    if (Person::isTargetClassObject<Person,Student>(dbManager.getFullList()[0].get())) {  EXPECT_EQ((Person::isTargetClassObject<Person,Student>(dbManager.getFullList()[0].get()))->getIndexNr(), 29481); };
     EXPECT_EQ(dbManager.getFullList()[0]->getPeselNr(), "90121464913");
     EXPECT_EQ(dbManager.getFullList()[0]->getSex(), Sex::Male);
 }
@@ -53,12 +53,12 @@ TEST(MainOperations, ShouldFindByLastName)
     auto found = dbManager.findPersonByLastName_Linear("Znicz");
     EXPECT_TRUE(found);
 
-    if (found)
-    {
+    if (found) 
+    { 
         EXPECT_EQ(found->get()->getFirstname(), "Jurek");
         EXPECT_EQ(found->get()->getLastname(), "Znicz");
         EXPECT_EQ(found->get()->getAddress(), "Luny 222");
-        EXPECT_EQ(found->get()->getIndexNr(), 10128);
+         if (Person::isTargetClassObject<Person,Student>(found->get())) {  EXPECT_EQ((Person::isTargetClassObject<Person,Student>(found->get()))->getIndexNr(), 10128); };
         EXPECT_EQ(found->get()->getPeselNr(), "66011781239");
         EXPECT_EQ(found->get()->getSex(), Sex::Male);
     }
@@ -80,7 +80,7 @@ TEST(MainOperations, ShouldFindByPesel)
         EXPECT_EQ(found->get()->getFirstname(), "Jurek");
         EXPECT_EQ(found->get()->getLastname(), "Znicz");
         EXPECT_EQ(found->get()->getAddress(), "Luny 222");
-        EXPECT_EQ(found->get()->getIndexNr(), 10128);
+        if (Person::isTargetClassObject<Person,Student>(found->get())) {  EXPECT_EQ((Person::isTargetClassObject<Person,Student>(found->get()))->getIndexNr(), 10128); };
         EXPECT_EQ(found->get()->getPeselNr(), "66011781239");
         EXPECT_EQ(found->get()->getSex(), Sex::Male);
     }
@@ -147,7 +147,8 @@ TEST(MainOperations, ShouldModify)
     EXPECT_EQ(dbManager.findPersonAndModifyAddress(dbManager.getFullList().front()->getPeselNr(), "Luny 134"), ErrorCheck::OK);
 
     EXPECT_EQ(dbManager.findPersonAndModifyindexNr(dbManager.getFullList().front()->getPeselNr(), 10000), ErrorCheck::OK);
-    EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
+    if (Person::isTargetClassObject<Person,Student>(dbManager.getFullList().front().get())) {  EXPECT_EQ((Person::isTargetClassObject<Person,Student>(dbManager.getFullList().front().get()))->getIndexNr(), 10000); };
+   
 
     EXPECT_EQ(dbManager.findPersonAndModifypeselNr(dbManager.getFullList().front()->getPeselNr(), "49081828686"), ErrorCheck::OK);
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "49081828686");
@@ -156,7 +157,8 @@ TEST(MainOperations, ShouldModify)
 TEST(MainOperations, ShouldNotModifyIndexWhenIsDuplicate)
 {
     EXPECT_EQ(dbManager.findPersonAndModifyindexNr(dbManager.getFullList().front()->getPeselNr(), 10000), ErrorCheck::IndexInUse);
-    EXPECT_EQ(dbManager.getFullList().front()->getIndexNr(), 10000);
+   if (Person::isTargetClassObject<Person,Student>(dbManager.getFullList().front().get())) {  EXPECT_EQ((Person::isTargetClassObject<Person,Student>(dbManager.getFullList().front().get()))->getIndexNr(), 10000); };
+   
 }
 
 TEST(MainOperations, ShouldNotModifyPeselWhenIsDuplicate)

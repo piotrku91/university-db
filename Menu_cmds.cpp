@@ -442,31 +442,31 @@ void Menu::clear_command()
 
 void Menu::generate_command()
 { 
-     if (CommandArgs_.size() == 1) // simple showdb command
-    {
-  std::cout << "\nExporting database to HTML file.\n";
-    std::vector<std::string> tmpHTML;
-    if (dbManager_.getFullList().empty()) {std::cout << "\nDatabase is empty! Nothing to generate\n"; return;};
+//      if (CommandArgs_.size() == 1) // simple showdb command
+//     {
+//   std::cout << "\nExporting database to HTML file.\n";
+//     std::vector<std::string> tmpHTML;
+//     if (dbManager_.getFullList().empty()) {std::cout << "\nDatabase is empty! Nothing to generate\n"; return;};
 
-    readFileToVector("templates/html1", tmpHTML);
+//     readFileToVector("templates/html1", tmpHTML);
 
-    for (auto &person : dbManager_.getFullList())
-    {
-        tmpHTML.push_back("<tr><td>" + person->getFirstname() + "</td><td>" + person->getLastname() + "</td><td>" + person->getAddress() + "</td><td>" + std::to_string(person->getIndexNr()) + "</td><td>" + person->getPeselNr()+ "</td><td>" + person->sexToString(person->getSex()) + "</td></tr>");
-                std::cout
-            << std::endl;
-    };
+//     for (auto &person : dbManager_.getFullList())
+//     {
+//       //  tmpHTML.push_back("<tr><td>" + person->getFirstname() + "</td><td>" + person->getLastname() + "</td><td>" + person->getAddress() + "</td><td>" + std::to_string(person->getIndexNr()) + "</td><td>" + person->getPeselNr()+ "</td><td>" + person->sexToString(person->getSex()) + "</td></tr>");
+//                 std::cout
+//             << std::endl;
+//     };
 
-    readFileToVector("templates/html2", tmpHTML);
-    if (saveVectorToFile("generated.html",tmpHTML)) {std::cout << "\nDone.\n";} else {;std::cout << "\nError.\n";};
-return;
-    };
-      if (CommandArgs_.at(1) == "help")
-    {
-        std::cout << "generate - Generate HTML file with all records from database.\n"
-                  << "Example: generate\n\n";
-                  return;
-    };
+//     readFileToVector("templates/html2", tmpHTML);
+//     if (saveVectorToFile("generated.html",tmpHTML)) {std::cout << "\nDone.\n";} else {;std::cout << "\nError.\n";};
+// return;
+//     };
+//       if (CommandArgs_.at(1) == "help")
+//     {
+//         std::cout << "generate - Generate HTML file with all records from database.\n"
+//                   << "Example: generate\n\n";
+//                   return;
+//     };
 
   
 }
