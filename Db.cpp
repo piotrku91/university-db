@@ -445,6 +445,25 @@ ErrorCheck Db::findPersonAndModifyAddress(const std::string& peselNr, const std:
     }
     return ErrorCheck::NotFound;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ErrorCheck Db::findPersonAndModifySalary(const std::string& peselNr, const int &newSalary)
+{
+    auto found = findPersonByPesel_Binary(peselNr);
+    if (found)
+    {
+        auto student_ptr = Person::isTargetClassObject<Person,Worker>(found->get());
+        if (student_ptr) {
+        student_ptr->setSalary(newSalary);
+        rebuildIndex();
+        return ErrorCheck::OK;
+        };
+    }
+    return ErrorCheck::NotFound;
+
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ErrorCheck Db::findPersonAndModifyindexNr(const std::string& peselNr, const int &newindexNr)
 {

@@ -52,6 +52,7 @@ public:
     ErrorCheck findPersonAndModifyAddress(const std::string& peselNr, const std::string& newAddress);
     ErrorCheck findPersonAndModifyindexNr(const std::string& peselNr, const int& newindexNr);
     ErrorCheck findPersonAndModifypeselNr(const std::string& peselNr, const std::string& newpeselNr);
+    ErrorCheck findPersonAndModifySalary(const std::string& peselNr, const int &newSalary);
 
     size_t getCount() const {return Records_.size();};
     const std::vector<std::unique_ptr<Person>> &getFullList() const { return Records_; };

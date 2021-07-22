@@ -13,12 +13,14 @@ private:
     Sex sexType_;
     
 public:
+    // TEMPLATE FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     template <typename T>
     static std::unique_ptr<Person> createPerson(T&& Args) // Person factory function
     {
         return std::make_unique<T>(Args);
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     template <typename T,typename T2> // Functions checks if object pointer is specify type of derived class object
     static T2* isTargetClassObject(T* derivedClass)
     {
@@ -27,13 +29,15 @@ public:
     if (cast_test) {return cast_test;};
     return nullptr;
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
 
     // Getters
     std::string getFirstname() const { return firstname_; };
     std::string getLastname() const { return lastname_; };
     std::string getAddress() const { return address_; };
     std::string getPeselNr() const { return peselNr_; };
+    
     
     Sex getSex() const { return sexType_; };
     virtual PersonType getPersonType() const = 0;
@@ -85,8 +89,8 @@ int Salary_;
 
 public:
 PersonType getPersonType() const override {return PersonType::Worker;};
-void getSalary(int newSalary) {Salary_=newSalary;};
-int getSalary() const  {return Salary_;};
+void setSalary(int newSalary) {Salary_=newSalary;};
+int getSalary() const {return Salary_;};
 
 
 

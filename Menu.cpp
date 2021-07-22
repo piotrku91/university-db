@@ -93,7 +93,14 @@ void Menu::showStudent(const std::unique_ptr<Person> &person)
 {
     std::cout << std::left;
     auto student_ptr = Person::isTargetClassObject<Person,Student>(person.get());
-    std::cout << " | " << std::setw(20) << person->getFirstname() << " | " << std::setw(20) << person->getLastname() << " | " << std::setw(20) << person->getAddress() << " | " << std::setw(20) << student_ptr->getIndexNr() << " | " << std::setw(20) << person->getPeselNr() << " | " << std::setw(20) << person->sexToString(person->getSex()) << " | ";
+    std::cout << " | " << std::setw(13) << person->getFirstname() << " | " 
+    << std::setw(13) << person->getLastname() << " | " 
+    << std::setw(13) << person->getAddress() << " | " 
+    << std::setw(13) << student_ptr->getIndexNr() 
+    << " | " << std::setw(13) << person->getPeselNr() << " | " 
+    << std::setw(13) << person->sexToString(person->getSex()) 
+    << " | "<< std::setw(13) << (Person::isTargetClassObject<Person,Worker>(person.get())?Person::isTargetClassObject<Person,Worker>(person.get())->getSalary():0) 
+    << " | " << std::setw(13) << ((person->getPersonType()==PersonType::Student)?"Student":"Worker") << " | " ;
 
     // std::cout << person->getFirstname() << " " << person->getLastname() << " - " << person->getAddress() << ", Index Nr: " << person->getIndexNr() << ", Pesel Nr: " << person->getPeselNr() << " Sex: " << person->sexToString(person->getSex());
 }
@@ -189,12 +196,12 @@ void Menu::mainLoop()
 void Menu::Display_prepareHeaderCaption(const std::string &Text)
 {
     std::cout << std::left;
-    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setfill('-') << std::setw(104 + (8 * std::size(" | ")) - 7) << " +";
     std::cout << std::setw(0) << std::setfill(' ');
     std::cout << "+";
 
     std::cout << "\n";
-    std::cout << " | " << std::setw(120 + (6 * std::size(" | ")) - 9) << Text << std::right << " |";
+    std::cout << " | " << std::setw(104 + (8 * std::size(" | ")) - 11) << Text << std::right << " |";
     std::cout << std::setw(0);
     std::cout << "\n";
 }
@@ -202,21 +209,23 @@ void Menu::Display_prepareHeaderCaption(const std::string &Text)
 void Menu::Display_prepareHeader()
 {
     std::cout << std::left;
-    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setfill('-') << std::setw(104 + (8 * std::size(" | ")) - 7) << " +";
     std::cout << std::setw(0) << std::setfill(' ');
     std::cout << "+";
 
     std::cout << "\n";
-    std::cout << " | " << std::setw(20) << "Firstname"
-              << " | " << std::setw(20) << "Lastname"
-              << " | " << std::setw(20) << "Address"
-              << " | " << std::setw(20) << "Index number"
-              << " | " << std::setw(20) << "Pesel number"
-              << " | " << std::setw(20) << "Sex"
+    std::cout << " | " << std::setw(13) << "Firstname"
+              << " | " << std::setw(13) << "Lastname"
+              << " | " << std::setw(13) << "Address"
+              << " | " << std::setw(13) << "Index number"
+              << " | " << std::setw(13) << "Pesel number"
+              << " | " << std::setw(13) << "Sex"
+              << " | " << std::setw(13) << "Salary"
+              << " | " << std::setw(13) << "Position"
               << " | " << std::endl;
     std::cout << std::setw(0);
 
-    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setfill('-') << std::setw(104 + (8 * std::size(" | ")) - 7) << " +";
     std::cout << std::setw(0) << std::setfill(' ');
     std::cout << "+\n";
 }
@@ -225,16 +234,16 @@ void Menu::Display_prepareHeader()
 void Menu::Display_prepareFooter(const std::string &Text)
 {
 
-    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setfill('-') << std::setw(104 + (8 * std::size(" | ")) - 7) << " +";
     std::cout << std::setw(0) << std::setfill(' ');
     std::cout << "+";
 
     std::cout << "\n";
-    std::cout << " | " << std::setw(120 + (6 * std::size(" | ")) - 9) << Text << " |";
+    std::cout << " | " << std::setw(104 + (8 * std::size(" | ")) - 11) << Text << " |";
     std::cout << std::setw(0);
     std::cout << "\n";
 
-    std::cout << std::setfill('-') << std::setw(120 + (6 * std::size(" | ")) - 5) << " +";
+    std::cout << std::setfill('-') << std::setw(104 + (8 * std::size(" | ")) - 7) << " +";
     std::cout << std::setw(0) << std::setfill(' ');
     std::cout << "+\n";
 }
