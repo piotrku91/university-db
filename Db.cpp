@@ -8,6 +8,7 @@ ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const st
     {
     case ErrorCheck::OK:
     {
+
         if (type==PersonType::Student) {
         Records_.push_back(Person::createPerson<Student>(Student{firstname, lastname, address, indexNr, peselNr, sexType}));
         rebuildIndex();
@@ -326,7 +327,7 @@ bool Db::saveToFile(const std::string &filename)
         fileObject.write(reinterpret_cast<char*>(&tmpSizeVar), sizeof(tmpSizeVar));
         fileObject.write(reinterpret_cast<char*>(onePerson->getAddress().data()), sizeof(char) * tmpSizeVar);
 
-        // Save int indexNr_
+        // Save int indexNr_ or Salary
         auto tmpSizeVar2 = 0;
         auto student_ptr = Person::isTargetClassObject<Person,Student>(onePerson.get());
         if (student_ptr) { tmpSizeVar2 = student_ptr->getIndexNr(); };
@@ -383,16 +384,16 @@ bool Db::loadFromFile(const std::string &filename)
         auto addressTmp = std::make_unique<char[]>(tmpSizeVar + 1);
         fileObject.read(addressTmp.get(), sizeof(char) * tmpSizeVar);
 
-        // Read indexNr_
-        int indexNr;
-        fileObject.read(reinterpret_cast<char*>(&indexNr), sizeof(indexNr));
+        // Read indexNr_ or salary
+        int indexNrOrSalary;
+        fileObject.read(reinterpret_cast<char*>(&indexNrOrSalary), sizeof(indexNrOrSalary));
 
-        // Read indexNr_
+        // Read pesel nr
         fileObject.read(reinterpret_cast<char*>(&tmpSizeVar), sizeof(tmpSizeVar));
         auto peselNrTmp = std::make_unique<char[]>(tmpSizeVar + 1);
         fileObject.read(peselNrTmp.get(), sizeof(char) * tmpSizeVar);
 
-        // Read indexNr_
+        // Read sex
         Sex sexTmp;
         fileObject.read(reinterpret_cast<char*>(&sexTmp), sizeof(sexTmp));
 
@@ -401,7 +402,13 @@ bool Db::loadFromFile(const std::string &filename)
        fileObject.read(reinterpret_cast<char*>(&personTypeTmp), sizeof(personTypeTmp));
 
         // Add new student
-        addPerson(personTypeTmp,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNr, peselNrTmp.get(), sexTmp);
+        if (personTypeTmp==PersonType::Student) {
+        addPerson(personTypeTmp,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), indexNrOrSalary, peselNrTmp.get(), sexTmp);
+        }
+        else 
+        {
+        addPerson(personTypeTmp,firstnameTmp.get(), lastnameTmp.get(), addressTmp.get(), 0, peselNrTmp.get(), sexTmp, indexNrOrSalary);
+        }
     }
     fileObject.close();
     return true;
@@ -453,9 +460,9 @@ ErrorCheck Db::findPersonAndModifySalary(const std::string& peselNr, const int &
     auto found = findPersonByPesel_Binary(peselNr);
     if (found)
     {
-        auto student_ptr = Person::isTargetClassObject<Person,Worker>(found->get());
-        if (student_ptr) {
-        student_ptr->setSalary(newSalary);
+        auto worker_ptr = Person::isTargetClassObject<Person,Worker>(found->get());
+        if (worker_ptr) {
+        worker_ptr->setSalary(newSalary);
         rebuildIndex();
         return ErrorCheck::OK;
         };

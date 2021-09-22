@@ -181,11 +181,20 @@ void Menu::add_command()
             return;
         };
     }
+    std::string tmpVar;
+    std::tuple<std::string, std::string, std::string, int, std::string, Sex, PersonType> tmpVars;
 
-    std::tuple<std::string, std::string, std::string, int, std::string, Sex> tmpVars;
+        std::cout << "Type of account Worker/Student (try: w / s): ";
+    std::getline(std::cin, tmpVar);
+    if ((tmpVar == "") || ((std::tolower(tmpVar[0]) != 'w') && (std::tolower(tmpVar[0]) != 's')))
+    {
+        std::cout << "Add procedure failed! - Wrong account tyoe. \n";
+        return;
+    };
+    std::get<6>(tmpVars) = (tmpVar == "w") ? PersonType::Worker : PersonType::Student;
 
-    std::cout << "Procedure of addition new strudent open\n\n";
-    std::cout << "Type firstname of new student: ";
+    std::cout << "Procedure of addition new person open\n\n";
+    std::cout << "Type firstname of new person: ";
     std::getline(std::cin, std::get<0>(tmpVars));
     if ((std::get<0>(tmpVars) == "") || (std::any_of(std::get<0>(tmpVars).begin(), std::get<0>(tmpVars).end(), [](char x)
                                                      { return !std::isalpha(x); })))
@@ -194,7 +203,7 @@ void Menu::add_command()
         return;
     };
 
-    std::cout << "Type lastname of new student: ";
+    std::cout << "Type lastname of new person: ";
     std::getline(std::cin, std::get<1>(tmpVars));
     if ((std::get<1>(tmpVars) == "") || (std::any_of(std::get<1>(tmpVars).begin(), std::get<1>(tmpVars).end(), [](char x)
                                                      { return !std::isalpha(x); })))
@@ -203,7 +212,7 @@ void Menu::add_command()
         return;
     };
 
-    std::cout << "Type address of new student: ";
+    std::cout << "Type address of new person: ";
     std::getline(std::cin, std::get<2>(tmpVars));
     if ((std::get<2>(tmpVars) == ""))
     {
@@ -211,18 +220,18 @@ void Menu::add_command()
         return;
     };
 
-    std::cout << "Type index number of new student: ";
-    std::string tmpVar;
+    if (std::get<6>(tmpVars)==PersonType::Student) {std::cout << "Type index number of new person: ";} else {std::cout << "Type salary of new person: ";};;
+    
     std::getline(std::cin, tmpVar);
     if ((tmpVar == "") || (std::any_of(tmpVar.begin(), tmpVar.end(), [](char x)
                                        { return !std::isdigit(x); })))
     {
-        std::cout << "Add procedure failed! - Wrong Index number . \n";
+        std::cout << "Add procedure failed! - Wrong number . \n";
         return;
     };
     std::get<3>(tmpVars) = std::stoi(tmpVar);
 
-    std::cout << "Type PESEL number of new student: ";
+    std::cout << "Type PESEL number of new person: ";
     std::getline(std::cin, tmpVar);
     if ((tmpVar == "") || (tmpVar.size() < 11) || (std::any_of(tmpVar.begin(), tmpVar.end(), [](char x)
                                                                { return !std::isdigit(x); })))
@@ -232,7 +241,7 @@ void Menu::add_command()
     };
     std::get<4>(tmpVars) = tmpVar;
 
-    std::cout << "Type sex of new student (try: f / m): ";
+    std::cout << "Type sex of new person (try: f / m): ";
     std::getline(std::cin, tmpVar);
     if ((tmpVar == "") || ((std::tolower(tmpVar[0]) != 'f') && (std::tolower(tmpVar[0]) != 'm')))
     {
@@ -241,9 +250,10 @@ void Menu::add_command()
     };
     std::get<5>(tmpVars) = (tmpVar == "f") ? Sex::Female : Sex::Male;
 
-    std::cout << "Attempt to add student to database... ";
-    addNewUser(PersonType::Student,std::get<0>(tmpVars), std::get<1>(tmpVars), std::get<2>(tmpVars), std::get<3>(tmpVars), std::get<4>(tmpVars), std::get<5>(tmpVars));
-    // std::apply(dbmanager_.addStudent,tmpVars);
+ 
+
+    std::cout << "Attempt to add person to database... ";
+    addNewUser(std::get<6>(tmpVars),std::get<0>(tmpVars), std::get<1>(tmpVars), std::get<2>(tmpVars), std::get<3>(tmpVars), std::get<4>(tmpVars), std::get<5>(tmpVars));
     std::cout << "";
     return;
 }
