@@ -58,7 +58,7 @@ public:
     void deleteUser(const int &IndexNr);
     void searchAndShow_Lastname(const std::string &lastName);
     void searchAndShow_Pesel(const std::string &PeselNr);
-    void showStudent(const std::unique_ptr<Person> &person);
+    void showStudent(const std::shared_ptr<Person> &person);
     void showDb();
     void showDbView_Pesel(Order O = Order::Asc);
     void showDbView_LastName(Order O = Order::Asc);

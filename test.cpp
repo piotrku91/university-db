@@ -48,18 +48,18 @@ TEST(MainOperations, ShouldANotAddDuplicatesPesel) {
 
 TEST(MainOperations, ShouldFindByLastName) {
     auto found = dbManager.findPersonByLastName_Linear("Znicz");
-    EXPECT_TRUE(found);
+    ASSERT_TRUE(found);
 
-    if (found) {
-        EXPECT_EQ(found->get()->getFirstname(), "Jurek");
-        EXPECT_EQ(found->get()->getLastname(), "Znicz");
-        EXPECT_EQ(found->get()->getAddress(), "Luny 222");
-        if (Person::isTargetClassObject<Person, Student>(found->get())) {
-            EXPECT_EQ((Person::isTargetClassObject<Person, Student>(found->get()))->getIndexNr(), 10128);
+    
+        EXPECT_EQ(found->getFirstname(), "Jurek");
+        EXPECT_EQ(found->getLastname(), "Znicz");
+        EXPECT_EQ(found->getAddress(), "Luny 222");
+        if (Person::isTargetClassObject<Person, Student>(found.get())) {
+        EXPECT_EQ((Person::isTargetClassObject<Person, Student>(found.get()))->getIndexNr(), 10128);
         };
-        EXPECT_EQ(found->get()->getPeselNr(), "66011781239");
-        EXPECT_EQ(found->get()->getSex(), Sex::Male);
-    }
+        EXPECT_EQ(found.get()->getPeselNr(), "66011781239");
+        EXPECT_EQ(found.get()->getSex(), Sex::Male);
+    
 }
 
 TEST(MainOperations, ShouldNotFindByLastName) {
@@ -72,14 +72,14 @@ TEST(MainOperations, ShouldFindByPesel) {
     EXPECT_TRUE(found);
 
     if (found) {
-        EXPECT_EQ(found->get()->getFirstname(), "Jurek");
-        EXPECT_EQ(found->get()->getLastname(), "Znicz");
-        EXPECT_EQ(found->get()->getAddress(), "Luny 222");
-        if (Person::isTargetClassObject<Person, Student>(found->get())) {
-            EXPECT_EQ((Person::isTargetClassObject<Person, Student>(found->get()))->getIndexNr(), 10128);
+        EXPECT_EQ(found.get()->getFirstname(), "Jurek");
+        EXPECT_EQ(found.get()->getLastname(), "Znicz");
+        EXPECT_EQ(found.get()->getAddress(), "Luny 222");
+        if (Person::isTargetClassObject<Person, Student>(found.get())) {
+            EXPECT_EQ((Person::isTargetClassObject<Person, Student>(found.get()))->getIndexNr(), 10128);
         };
-        EXPECT_EQ(found->get()->getPeselNr(), "66011781239");
-        EXPECT_EQ(found->get()->getSex(), Sex::Male);
+        EXPECT_EQ(found.get()->getPeselNr(), "66011781239");
+        EXPECT_EQ(found.get()->getSex(), Sex::Male);
     }
 }
 
@@ -112,11 +112,9 @@ TEST(MainOperations, ShouldSortByPesel) {
     EXPECT_EQ(dbManager.getFullList().front()->getPeselNr(), "54022845648");
 }
 
-TEST(MainOperations, ShouldSaveToFile) {
-    EXPECT_TRUE(dbManager.saveToFile("test_data.db"));
-}
 
-TEST(MainOperations, ShouldEraseDatabaseAndLoadFromFile) {
+TEST(MainOperations, ShouldSave_EraseDatabase_And_LoadFromFile) {
+    EXPECT_TRUE(dbManager.saveToFile("test_data.db"));
     EXPECT_EQ(dbManager.getCount(), 6);
     dbManager.eraseDatabase();
     EXPECT_EQ(dbManager.getCount(), 0);

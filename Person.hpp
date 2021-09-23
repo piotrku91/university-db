@@ -16,7 +16,7 @@ public:
     // TEMPLATE FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     template <typename T>
-    static std::unique_ptr<Person> createPerson(T&& Args) // Person factory function
+    static std::shared_ptr<Person> createPerson(T&& Args) // Person factory function
     {
         return std::make_unique<T>(Args);
     }

@@ -43,9 +43,9 @@ ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const st
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Person> *Db::findPersonByLastName_Linear(const std::string &lastname)
+std::shared_ptr<Person>Db::findPersonByLastName_Linear(const std::string &lastname)
 {
-    auto it = (std::find_if(Records_.begin(), Records_.end(), [&lastname](std::unique_ptr<Person> &student_ptr)
+    auto it = (std::find_if(Records_.begin(), Records_.end(), [&lastname](std::shared_ptr<Person> &student_ptr)
                             {
                                 if (student_ptr->getLastname() == lastname)
                                 {
@@ -55,7 +55,7 @@ std::unique_ptr<Person> *Db::findPersonByLastName_Linear(const std::string &last
                             }));
     if (it != Records_.end())
     {
-        return &(*it);
+        return *it;
     }
     else
     {
@@ -63,9 +63,9 @@ std::unique_ptr<Person> *Db::findPersonByLastName_Linear(const std::string &last
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Person> *Db::findPersonByPesel_Linear(const std::string &peselNr)
+std::shared_ptr<Person>Db::findPersonByPesel_Linear(const std::string &peselNr)
 {
-    auto it = (std::find_if(Records_.begin(), Records_.end(), [&peselNr](std::unique_ptr<Person> &student_ptr)
+    auto it = (std::find_if(Records_.begin(), Records_.end(), [&peselNr](std::shared_ptr<Person> &student_ptr)
                             {
                                 if (student_ptr->getPeselNr() == peselNr)
                                 {
@@ -75,7 +75,7 @@ std::unique_ptr<Person> *Db::findPersonByPesel_Linear(const std::string &peselNr
                             }));
     if (it != Records_.end())
     {
-        return &(*it);
+        return *it;
     }
     else
     {
@@ -83,7 +83,7 @@ std::unique_ptr<Person> *Db::findPersonByPesel_Linear(const std::string &peselNr
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Person> *Db::findPersonByPesel_Binary(const std::string &peselNr)
+std::shared_ptr<Person>Db::findPersonByPesel_Binary(const std::string &peselNr)
 {
     auto it = (IndexOfPersonsPesels_.find(peselNr));
 
@@ -97,7 +97,7 @@ std::unique_ptr<Person> *Db::findPersonByPesel_Binary(const std::string &peselNr
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<Person> *Db::findPersonByIdx_Binary(const int &indexNr)
+std::shared_ptr<Person>Db::findPersonByIdx_Binary(const int &indexNr)
 {
     auto it = (IndexOfStudentIdxs_.find(indexNr));
 
@@ -120,7 +120,7 @@ bool Db::deleteByIndexNr(const int &indexNr)
     auto it = findPersonByIdx_Binary(indexNr);
     if (it)
     {
-        Records_.erase(std::remove(Records_.begin(), Records_.end(), *it), Records_.end());
+        Records_.erase(std::remove(Records_.begin(), Records_.end(), it), Records_.end());
         rebuildIndex();
         return true;
     };
@@ -177,7 +177,7 @@ void Db::sortByLastName(Order O)
     {
         return;
     };
-    std::sort(Records_.begin(), Records_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
+    std::sort(Records_.begin(), Records_.end(), [&O](std::shared_ptr<Person> &student_ptr1, std::shared_ptr<Person> &student_ptr2)
               {
                   if (std::lexicographical_compare(student_ptr1->getLastname().begin(), student_ptr1->getLastname().end(), student_ptr2->getLastname().begin(), student_ptr2->getLastname().end()))
                   {
@@ -196,7 +196,7 @@ void Db::sortByPesel(Order O)
         return;
     };
 
-    std::sort(Records_.begin(), Records_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
+    std::sort(Records_.begin(), Records_.end(), [&O](std::shared_ptr<Person> &student_ptr1, std::shared_ptr<Person> &student_ptr2)
               {
                   if (student_ptr1->getPeselNr() < student_ptr2->getPeselNr())
                   {
@@ -215,7 +215,7 @@ void Db::sortBySalary(Order O)
         return;
     };
 
-    std::sort(Records_.begin(), Records_.end(), [&O](std::unique_ptr<Person> &student_ptr1, std::unique_ptr<Person> &student_ptr2)
+    std::sort(Records_.begin(), Records_.end(), [&O](std::shared_ptr<Person> &student_ptr1, std::shared_ptr<Person> &student_ptr2)
               {
                 
                    auto lhs = (Person::isTargetClassObject<Person,Worker>(student_ptr1.get()))?Person::isTargetClassObject<Person,Worker>(student_ptr1.get())->getSalary():0;
@@ -230,10 +230,10 @@ void Db::sortBySalary(Order O)
     rebuildIndex();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<std::unique_ptr<Person> *> Db::sortByLastNameTemporary(Order O)
+std::vector<std::shared_ptr<Person>> Db::sortByLastNameTemporary(Order O)
 {
 
-    std::vector<std::unique_ptr<Person> *> tmpSortedList;
+    std::vector<std::shared_ptr<Person>> tmpSortedList;
 
     if (Records_.empty())
     {
@@ -242,12 +242,12 @@ std::vector<std::unique_ptr<Person> *> Db::sortByLastNameTemporary(Order O)
 
     for (auto &onePerson : Records_)
     {
-        tmpSortedList.push_back(&onePerson);
+        tmpSortedList.push_back(onePerson);
     };
 
-    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Person> *student_ptr1, std::unique_ptr<Person> *student_ptr2)
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::shared_ptr<Person>student_ptr1, std::shared_ptr<Person>student_ptr2)
               {
-                  if (std::lexicographical_compare(student_ptr1->get()->getLastname().begin(), student_ptr1->get()->getLastname().end(), student_ptr2->get()->getLastname().begin(), student_ptr2->get()->getLastname().end()))
+                  if (std::lexicographical_compare(student_ptr1->getLastname().begin(), student_ptr1->getLastname().end(), student_ptr2->getLastname().begin(), student_ptr2->getLastname().end()))
                   {
                       return (O == Order::Asc) ? true : false;
                   }
@@ -257,9 +257,9 @@ std::vector<std::unique_ptr<Person> *> Db::sortByLastNameTemporary(Order O)
     return tmpSortedList;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<std::unique_ptr<Person> *> Db::sortByPeselTemporary(Order O)
+std::vector<std::shared_ptr<Person>> Db::sortByPeselTemporary(Order O)
 {
-    std::vector<std::unique_ptr<Person> *> tmpSortedList;
+    std::vector<std::shared_ptr<Person>> tmpSortedList;
 
     if (Records_.empty())
     {
@@ -268,12 +268,12 @@ std::vector<std::unique_ptr<Person> *> Db::sortByPeselTemporary(Order O)
 
     for (auto &onePerson : Records_)
     {
-        tmpSortedList.push_back(&onePerson);
+        tmpSortedList.push_back(onePerson);
     };
 
-    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::unique_ptr<Person> *student_ptr1, std::unique_ptr<Person> *student_ptr2)
+    std::sort(tmpSortedList.begin(), tmpSortedList.end(), [&O](std::shared_ptr<Person>student_ptr1, std::shared_ptr<Person>student_ptr2)
               {
-                  if (student_ptr1->get()->getPeselNr() < student_ptr2->get()->getPeselNr())
+                  if (student_ptr1->getPeselNr() < student_ptr2->getPeselNr())
                   {
                       return (O == Order::Asc) ? true : false;
                   }
@@ -293,8 +293,8 @@ void Db::rebuildIndex()
     for (auto &onePerson : Records_)
     {
         auto student_ptr = Person::isTargetClassObject<Person,Student>(onePerson.get());
-        if (student_ptr) {IndexOfStudentIdxs_.insert({student_ptr->getIndexNr(), &onePerson});};
-        IndexOfPersonsPesels_.insert({onePerson->getPeselNr(), &onePerson});
+        if (student_ptr) {IndexOfStudentIdxs_.insert({student_ptr->getIndexNr(), onePerson});};
+        IndexOfPersonsPesels_.insert({onePerson->getPeselNr(), onePerson});
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -425,7 +425,7 @@ ErrorCheck Db::findPersonAndModifyFirstname(const std::string& peselNr, const st
     auto found = findPersonByPesel_Binary(peselNr);
     if (found)
     {
-        found->get()->setFirstname(newFirstname);
+        found->setFirstname(newFirstname);
         return ErrorCheck::OK;
     }
     return ErrorCheck::NotFound;
@@ -436,7 +436,7 @@ ErrorCheck Db::findPersonAndModifyLastname(const std::string& peselNr, const std
     auto found = findPersonByPesel_Binary(peselNr);
     if (found)
     {
-        found->get()->setLastname(newLastname);
+        found->setLastname(newLastname);
         return ErrorCheck::OK;
     }
     return ErrorCheck::NotFound;
@@ -447,7 +447,7 @@ ErrorCheck Db::findPersonAndModifyAddress(const std::string& peselNr, const std:
     auto found = findPersonByPesel_Binary(peselNr);
     if (found)
     {
-        found->get()->setAddress(newAddress);
+        found->setAddress(newAddress);
         return ErrorCheck::OK;
     }
     return ErrorCheck::NotFound;
@@ -460,7 +460,7 @@ ErrorCheck Db::findPersonAndModifySalary(const std::string& peselNr, const int &
     auto found = findPersonByPesel_Binary(peselNr);
     if (found)
     {
-        auto worker_ptr = Person::isTargetClassObject<Person,Worker>(found->get());
+        auto worker_ptr = Person::isTargetClassObject<Person,Worker>(found.get());
         if (worker_ptr) {
         worker_ptr->setSalary(newSalary);
         rebuildIndex();
@@ -481,7 +481,7 @@ ErrorCheck Db::findPersonAndModifyindexNr(const std::string& peselNr, const int 
         {
             return ErrorCheck::IndexInUse;
         };
-        auto student_ptr = Person::isTargetClassObject<Person,Student>(found->get());
+        auto student_ptr = Person::isTargetClassObject<Person,Student>(found.get());
         if (student_ptr) {
         student_ptr->setindexNr(newindexNr);
         rebuildIndex();
@@ -502,12 +502,12 @@ ErrorCheck Db::findPersonAndModifypeselNr(const std::string& peselNr, const std:
             return ErrorCheck::PeselInUse;
         };
 
-        if (!peselValidator(newpeselNr, found->get()->getSex()))
+        if (!peselValidator(newpeselNr, found.get()->getSex()))
         {
             return ErrorCheck::PeselInvalid;
         }
 
-        found->get()->setpeselNr(newpeselNr);
+        found->setpeselNr(newpeselNr);
         rebuildIndex();
         return ErrorCheck::OK;
     }

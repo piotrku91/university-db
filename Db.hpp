@@ -11,10 +11,9 @@
 class Db
 {
 private:
-    std::vector<std::unique_ptr<Person>> Records_;
-    std::map<int,std::unique_ptr<Person>*> IndexOfStudentIdxs_;
-    std::map<std::string,std::unique_ptr<Person>*> IndexOfPersonsPesels_;
-    const std::unique_ptr<Person>& getStudent(std::unique_ptr<Person>* student_ptr) { return *student_ptr;};
+    std::vector<std::shared_ptr<Person>> Records_;
+    std::map<int,std::shared_ptr<Person>> IndexOfStudentIdxs_;
+    std::map<std::string,std::shared_ptr<Person>> IndexOfPersonsPesels_;
     bool peselValidation_;
 
 public: 
@@ -28,8 +27,8 @@ public:
     void eraseDatabase(); // Delete all records and rebuild index
 
     // Setters - sort operations
-    std::vector<std::unique_ptr<Person>*> sortByLastNameTemporary(Order O=Order::Asc);
-    std::vector<std::unique_ptr<Person>*> sortByPeselTemporary(Order O=Order::Asc);
+    std::vector<std::shared_ptr<Person>> sortByLastNameTemporary(Order O=Order::Asc);
+    std::vector<std::shared_ptr<Person>> sortByPeselTemporary(Order O=Order::Asc);
     void sortByLastName(Order O=Order::Asc);
     void sortByPesel(Order O=Order::Asc);
     void sortBySalary(Order O=Order::Asc);
@@ -42,10 +41,10 @@ public:
     bool saveToFile(const std::string& filename);
     
     // Getters
-    std::unique_ptr<Person>* findPersonByLastName_Linear(const std::string& lastname);
-    std::unique_ptr<Person>* findPersonByPesel_Linear(const std::string& peselNr);
-    std::unique_ptr<Person>* findPersonByPesel_Binary(const std::string& peselNr);
-    std::unique_ptr<Person>* findPersonByIdx_Binary(const int& indexNr);
+    std::shared_ptr<Person> findPersonByLastName_Linear(const std::string& lastname);
+    std::shared_ptr<Person> findPersonByPesel_Linear(const std::string& peselNr);
+    std::shared_ptr<Person> findPersonByPesel_Binary(const std::string& peselNr);
+    std::shared_ptr<Person> findPersonByIdx_Binary(const int& indexNr);
 
     ErrorCheck findPersonAndModifyFirstname(const std::string& peselNr, const std::string& newFirstname);
     ErrorCheck findPersonAndModifyLastname(const std::string& peselNr, const std::string& newLastname);
@@ -55,9 +54,10 @@ public:
     ErrorCheck findPersonAndModifySalary(const std::string& peselNr, const int &newSalary);
 
     size_t getCount() const {return Records_.size();};
-    const std::vector<std::unique_ptr<Person>> &getFullList() const { return Records_; };
+    const std::vector<std::shared_ptr<Person>> &getFullList() const { return Records_; };
 
     // c - tor
     Db(bool loadOnStart=true): peselValidation_{true} {if (loadOnStart) {loadFromFile("data.db");};}; 
-    Db(Db&) = delete; // c - tor deleted
+    Db(const Db&) = delete; // c - tor deleted
+    Db& operator=(const Db&) = delete;
 };

@@ -44,7 +44,7 @@ void Menu::searchAndShow_Lastname(const std::string& lastName) {
     if (found) {
         Display_prepareHeaderCaption("Student found by lastname");
         Display_prepareHeader();
-        showStudent(*found);
+        showStudent(found);
         std::cout << std::endl;
         Display_prepareFooter();
     } else {
@@ -59,7 +59,7 @@ void Menu::searchAndShow_Pesel(const std::string& PeselNr) {
     if (found) {
         Display_prepareHeaderCaption("Student found by PESEL number");
         Display_prepareHeader();
-        showStudent(*found);
+        showStudent(found);
         std::cout << std::endl;
         Display_prepareFooter();
     } else {
@@ -77,7 +77,7 @@ void Menu::deleteUser(const int& indexNr) {
     std::cout << "\n";
 }
 
-void Menu::showStudent(const std::unique_ptr<Person>& person) {
+void Menu::showStudent(const std::shared_ptr<Person>& person) {
     std::cout << std::left;
     std::cout << " | " << std::setw(13) << person->getFirstname() << " | "
               << std::setw(13) << person->getLastname() << " | "
@@ -106,7 +106,7 @@ void Menu::showDbView_Pesel(Order O) {
     Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
     Display_prepareHeader();
     for (auto& person : dbManager_.sortByPeselTemporary(O)) {
-        showStudent(*person);
+        showStudent(person);
         std::cout << std::endl;
     };
     Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by PESEL - " + getOrderString(O));
@@ -117,7 +117,7 @@ void Menu::showDbView_LastName(Order O) {
     Display_prepareHeaderCaption("TEMPORARY VIEW OF SORTED STUDENTS DATABASE");
     Display_prepareHeader();
     for (auto& person : dbManager_.sortByLastNameTemporary(O)) {
-        showStudent(*person);
+        showStudent(person);
         std::cout << std::endl;
     };
     Display_prepareFooter("All records: " + std::to_string(dbManager_.getCount()) + " | Sort by Lastname - " + getOrderString(O));
