@@ -1,6 +1,7 @@
 #include <vector>
 #include "Db.hpp"
 #include "gtest/gtest.h"
+#include "generator.hpp"
 
 struct MainOperations : public ::testing::Test {
     Db dbManager{false};
@@ -249,4 +250,23 @@ TEST_F(MainOperations, ShouldFindByPeselAndModifySalary) {
     EXPECT_EQ(dbManager.findPersonAndModifySalary("88051187895", 4000), ErrorCheck::OK);
     EXPECT_EQ((Person::isTargetClassObject<Person, Worker>(dbManager.getFullList().back().get()))->getSalary(), 4000);
 }
-//
+
+
+TEST_F(MainOperations, ShouldAddNewStudentFromGenerator) {
+    Generator dbGen;
+    EXPECT_EQ(dbManager.getCount(), 0);
+    auto validFuncPointer= &Db::peselValidator;
+    dbManager.addPerson(dbGen.generatePerson(&dbManager,validFuncPointer));
+    EXPECT_EQ(dbManager.getCount(), 1);
+} 
+
+TEST_F(MainOperations, ShouldAddNewStudentByAmountFromGenerator) {
+    Generator dbGen;
+    EXPECT_EQ(dbManager.getCount(), 0);
+    auto validFuncPointer= &Db::peselValidator;
+    for (auto& newGeneratedGuy : dbGen.generatePerson(&dbManager,validFuncPointer,5)) {
+    dbManager.addPerson(newGeneratedGuy);
+    }
+    EXPECT_EQ(dbManager.getCount(), 5);
+} 
+

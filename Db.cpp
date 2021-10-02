@@ -43,7 +43,7 @@ ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const st
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ErrorCheck Db::addPerson(std::shared_ptr<Person>& completePerson)
+ErrorCheck Db::addPerson(const std::shared_ptr<Person>& completePerson)
 {
     switch ( 
         (completePerson->getPersonType()==PersonType::Student) ?
