@@ -19,6 +19,7 @@ private:
 public: 
     // Setters - main operations
     ErrorCheck addPerson(PersonType type, const std::string& firstname, const std::string& lastname, const std::string& address, const int indexNr, const std::string& peselNr, const Sex sexType, const int Salary=0);
+    ErrorCheck addPerson(std::shared_ptr<Person>& completePerson);
     ErrorCheck checkPeselUnique(const std::string &peselNr, Sex sexType);
     ErrorCheck checkIdxUnique(const int &indexNr);
     ErrorCheck checkIdxAndPeselUnique(const int& indexNr,const std::string& peselNr, Sex sexType);

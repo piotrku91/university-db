@@ -43,6 +43,47 @@ ErrorCheck Db::addPerson(PersonType type, const std::string& firstname, const st
     };
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ErrorCheck Db::addPerson(std::shared_ptr<Person>& completePerson)
+{
+    switch ( 
+        (completePerson->getPersonType()==PersonType::Student) ?
+    (checkIdxAndPeselUnique(Person::isTargetClassObject<Person,Student>(completePerson.get())->getIndexNr(), completePerson->getPeselNr(), completePerson->getSex())) 
+    : 
+    (checkPeselUnique(completePerson->getPeselNr(), completePerson->getSex())) 
+           )
+    {
+    case ErrorCheck::OK:
+    {
+        Records_.push_back(completePerson);
+     
+        return ErrorCheck::OK;
+        break;
+    }
+    case ErrorCheck::IndexInUse:
+    {
+        return ErrorCheck::IndexInUse;
+        break;
+    }
+    case ErrorCheck::PeselInUse:
+    {
+        return ErrorCheck::PeselInUse;
+        break;
+    }
+    case ErrorCheck::PeselInvalid:
+    {
+        return ErrorCheck::PeselInvalid;
+        break;
+    }
+    default:
+    {
+        return ErrorCheck::UnknownError;
+        break;
+    }
+    };
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::shared_ptr<Person>Db::findPersonByLastName_Linear(const std::string &lastname)
 {
     auto it = (std::find_if(Records_.begin(), Records_.end(), [&lastname](std::shared_ptr<Person> &student_ptr)

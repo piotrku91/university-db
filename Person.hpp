@@ -18,7 +18,7 @@ public:
     template <typename T>
     static std::shared_ptr<Person> createPerson(T&& Args) // Person factory function
     {
-        return std::make_unique<T>(Args);
+        return std::make_shared<T>(Args);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     template <typename T,typename T2> // Functions checks if object pointer is specify type of derived class object

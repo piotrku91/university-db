@@ -44,10 +44,11 @@ add_compile_options(${FLAGS})
 enable_testing()
 
 add_library(dbEngineLib STATIC Db.cpp)
+add_library(dbGeneratorLib STATIC generator.cpp)
 add_library(menuLib STATIC Menu.cpp Menu_cmds.cpp)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} dbEngineLib menuLib)
+target_link_libraries(${PROJECT_NAME} dbEngineLib menuLib dbGeneratorLib)
 
 add_executable(${PROJECT_NAME}-ut test.cpp)
 target_link_libraries(${PROJECT_NAME}-ut dbEngineLib gtest_main)
