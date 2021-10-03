@@ -1,7 +1,7 @@
 #include <vector>
 #include "Db.hpp"
 #include "gtest/gtest.h"
-#include "generator.hpp"
+#include "Generator.hpp"
 
 struct MainOperations : public ::testing::Test {
     Db dbManager{false};
@@ -264,9 +264,9 @@ TEST_F(MainOperations, ShouldAddNewStudentByAmountFromGenerator) {
     Generator dbGen;
     EXPECT_EQ(dbManager.getCount(), 0);
     auto validFuncPointer= &Db::peselValidator;
-    for (auto& newGeneratedGuy : dbGen.generatePerson(&dbManager,validFuncPointer,5)) {
-    dbManager.addPerson(newGeneratedGuy);
+    for (auto& newGeneratedGuy : dbGen.generatePerson(&dbManager,validFuncPointer,150)) {
+        EXPECT_EQ(dbManager.addPerson(newGeneratedGuy), ErrorCheck::OK);
     }
-    EXPECT_EQ(dbManager.getCount(), 5);
+    EXPECT_EQ(dbManager.getCount(), 150);
 } 
 
