@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.1)
+project(university-db VERSION 0.16)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -35,14 +36,22 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-add_compile_options(-Wall -Wextra -Werror -Wconversion -pedantic -pedantic-errors -g)
 
-project(university-db)
+
+set(FLAGS -Wall -Wextra -Werror -Wconversion -pedantic -pedantic-errors -g)
+
+add_compile_options(${FLAGS})
+
 enable_testing()
 
-add_executable(${PROJECT_NAME} main.cpp Db.cpp Menu.cpp Menu_cmds.cpp)
+add_library(dbEngineLib STATIC Db.cpp)
+add_library(dbGeneratorLib STATIC Generator.cpp)
+add_library(menuLib STATIC Menu.cpp Menu_cmds.cpp)
 
-add_executable(${PROJECT_NAME}-ut test.cpp Db.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} dbEngineLib menuLib dbGeneratorLib)
 
-target_link_libraries(${PROJECT_NAME}-ut gtest_main)
+add_executable(${PROJECT_NAME}-ut test.cpp)
+target_link_libraries(${PROJECT_NAME}-ut dbEngineLib dbGeneratorLib gtest_main)
+
 add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
