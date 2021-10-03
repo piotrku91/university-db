@@ -14,29 +14,24 @@ private:
     std::vector<std::string> lastnames_;
     std::vector<std::string> addresses_;
     std::mt19937 g;
-
-    bool readFileToVector(std::string filename, std::vector<std::string>& content);
-    bool saveVectorToFile(std::string filename, std::vector<std::string>& content);
     typedef std::chrono::high_resolution_clock clock_;
     clock_::time_point beginT;
 
+    bool readFileToVector(std::string filename, std::vector<std::string>& content);
+    bool saveVectorToFile(std::string filename, std::vector<std::string>& content);
+    
 public:
-    long int time_reseed() {
-        clock_::duration dur = clock_::now() - beginT;
-        long int seed = dur.count();
-        return seed;
-    }
-
+// Template functions begin
+///////////////////////////////////////////////////////////////////////////////////////////
     template <typename T1, typename T2>
     std::vector<std::shared_ptr<Person>> generatePerson(T1* dbManagerPtr, T2&& peselValidatorFunction, size_t amountToGenerate) {
         std::vector<std::shared_ptr<Person>> tmpGenerated(amountToGenerate);
-
         std::generate(tmpGenerated.begin(), tmpGenerated.end(), [&]() {
             return generatePerson(dbManagerPtr, peselValidatorFunction);
         });
         return tmpGenerated;
     }
-
+///////////////////////////////////////////////////////////////////////////////////////////
     template <typename T1, typename T2>
     std::shared_ptr<Person> generatePerson(T1* dbManagerPtr, T2&& peselValidatorFunction) {
         if (firstnames_.empty() || lastnames_.empty() || addresses_.empty()) {
@@ -54,8 +49,6 @@ public:
 
         std::uniform_int_distribution<int> rndIdxAdressess{0, static_cast<int>(addresses_.size() - 1)};
         auto tmpAddress = addresses_[rndIdxAdressess(g)];
-
-        // std::uniform_int_distribution<int> rndSex{0, 1};
 
         auto tmpIndexNr = 0;
         auto tmpSalary = 0;
@@ -87,6 +80,10 @@ public:
         }
         return Person::createPerson<Worker>(Worker{tmpFirstname, tmpLastname, tmpAddress, tmpPeselNr, tmpSex, tmpSalary});
     }
+///////////////////////////////////////////////////////////////////////////////////////////
+// Template functions end
+
+    long int time_reseed();
 
     Generator()
         : beginT(clock_::now()) {  // c-tor

@@ -1,7 +1,12 @@
 #include "Generator.hpp"
 #include <random>
-
-
+///////////////////////////////////////////////////////////////////////////////////////////
+long int Generator::time_reseed() {
+    clock_::duration dur = clock_::now() - beginT;
+    long int seed = dur.count();
+    return seed;
+}
+///////////////////////////////////////////////////////////////////////////////////////////
 bool Generator::readFileToVector(std::string filename, std::vector<std::string>& content) {
     std::ifstream input(filename.c_str());
     std::string linestr;
@@ -14,7 +19,7 @@ bool Generator::readFileToVector(std::string filename, std::vector<std::string>&
     input.close();
     return true;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////
 bool Generator::saveVectorToFile(std::string filename, std::vector<std::string>& content) {
     std::ofstream OutFile(filename);
     if (!OutFile) {
@@ -26,3 +31,4 @@ bool Generator::saveVectorToFile(std::string filename, std::vector<std::string>&
     OutFile.close();
     return true;
 }
+///////////////////////////////////////////////////////////////////////////////////////////
