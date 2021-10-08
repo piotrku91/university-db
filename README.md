@@ -20,11 +20,11 @@ https://www.youtube.com/watch?v=JFIHc3mh8-E
 
 
 ## Test screenshots:
-![Screenshot](screenshots/test.png)
+![Screenshot](screenshots/scr1.png)
 
-![Screenshot](screenshots/test2.png)
+![Screenshot](screenshots/scr2.png)
 
-![Screenshot](screenshots/test3.png)
+![Screenshot](screenshots/scr3.png)
 
 
 ## How to compile and run,
