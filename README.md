@@ -1,6 +1,8 @@
 # piotrq - university-db
 Simple Database C++ Engine
 
+HTTP API BRANCH DEMO
+
 Homework project for Coders School. Training.
 
 ### Authors:
@@ -22,8 +24,15 @@ https://www.youtube.com/watch?v=JFIHc3mh8-E
 
 ![Screenshot](screenshots/test2.png)
 
+![Screenshot](screenshots/test3.png)
 
-## How to compile and run
+
+## How to compile and run,
+
+>   Depedencies:
+
+    - Download file crow_all.h file from official crow repo -> https://github.com/ipkn/crow
+    - Install all depedencies from crow repo (check crow manual page)
 
 >   Type:
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+ <meta http-equiv="Expires" content="0" />
+
+<style>
+table.blueTable {
+    border: 2px solid #7162A4;
+    background-color: #EEEEEE;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  table.blueTable td, table.blueTable th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+  }
+  table.blueTable tbody td {
+    font-size: 13px;
+  }
+  table.blueTable tr:nth-child(even) {
+    background: #D0E4F5;
+  }
+  table.blueTable thead {
+    background: #4EA45D;
+    background: -moz-linear-gradient(top, #7abb85 0%, #5fad6d 66%, #4EA45D 100%);
+    background: -webkit-linear-gradient(top, #7abb85 0%, #5fad6d 66%, #4EA45D 100%);
+    background: linear-gradient(to bottom, #7abb85 0%, #5fad6d 66%, #4EA45D 100%);
+    border-bottom: 2px solid #444444;
+  }
+  table.blueTable thead th {
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFFFFF;
+    border-left: 2px solid #D0E4F5;
+  }
+  table.blueTable thead th:first-child {
+    border-left: none;
+  }
+
+  table.blueTable tfoot {
+    font-size: 14px;
+    font-weight: bold;
+    background: #D0E4F5;
+    background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    border-top: 2px solid #444444;
+  }
+  table.blueTable tfoot td {
+    font-size: 14px;
+  }
+  table.blueTable tfoot .links {
+    text-align: right;
+  }
+  table.blueTable tfoot .links a{
+    display: inline-block;
+    background: #1C6EA4;
+    color: #FFFFFF;
+    padding: 2px 8px;
+    border-radius: 5px;
+  }
+
+</style>
+</head>
+<body>
+<center>
+  piotrq university-db crow http api demo
+<table class="blueTable">
+<thead>
+<tr>
+<th>Firstname</th>
+<th>Lastname</th>
+<th>Address</th>
+<th>Index number</th>
+<th>Pesel number</th>
+<th>Sex</th>
+<th>Salary</th>
+<th>Position</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td colspan="8">
+<div class="links">Generate: <a href="generate?amount=10">10</a> |  <a href="generate?amount=25">25</a> |  <a href="generate?amount=50">50</a>  - Sort: <a href="operation?sort=0&ord=0">Lastname asc</a> | <a href="operation?sort=0&ord=1">Lastname desc</a> | <a href="operation?sort=1&ord=0">Pesel asc</a> | <a href="operation?sort=1&ord=1">Pesel desc</a> | <a href="operation?sort=2&ord=0">Salary asc</a> | <a href="operation?sort=2&ord=1">Salary desc</a>  </div>
+</td>
+</tr>
+</tfoot>
+<tbody>
+
+
+

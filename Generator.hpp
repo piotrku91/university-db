@@ -16,7 +16,7 @@ private:
     std::mt19937 g;
     typedef std::chrono::high_resolution_clock clock_;
     clock_::time_point beginT;
-
+public:
     bool readFileToVector(std::string filename, std::vector<std::string>& content);
     bool saveVectorToFile(std::string filename, std::vector<std::string>& content);
     

@@ -36,9 +36,31 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+  message("Found ccache ${CCACHE_FOUND}")
+  message("Using ccache to speed up compilation")
+  set(ENV{CCACHE_CPP2} "yes")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
 
+if (NOT CMAKE_BUILD_TYPE)
+	message(STATUS "No build type selected, default to Release")
+	set(CMAKE_BUILD_TYPE "Release")
+endif()
 
-set(FLAGS -Wall -Wextra -Werror -Wconversion -pedantic -pedantic-errors -g)
+if (MSVC)
+	set(Boost_USE_STATIC_LIBS "On")
+	find_package( Boost 1.52 COMPONENTS system thread regex REQUIRED )
+else()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -pedantic -Wextra")
+	find_package( Boost 1.52 COMPONENTS system thread REQUIRED )
+endif()
+
+include_directories( ${Boost_INCLUDE_DIR} )
+
+set(FLAGS -Wall -Wextra  -pedantic -pedantic-errors -g)
 
 add_compile_options(${FLAGS})
 
@@ -46,10 +68,9 @@ enable_testing()
 
 add_library(dbEngineLib STATIC Db.cpp)
 add_library(dbGeneratorLib STATIC Generator.cpp)
-add_library(menuLib STATIC Menu.cpp Menu_cmds.cpp)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} dbEngineLib menuLib dbGeneratorLib)
+target_link_libraries(${PROJECT_NAME} dbEngineLib dbGeneratorLib ${Boost_LIBRARIES})
 
 add_executable(${PROJECT_NAME}-ut test.cpp)
 target_link_libraries(${PROJECT_NAME}-ut dbEngineLib dbGeneratorLib gtest_main)
