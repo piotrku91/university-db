@@ -20,9 +20,9 @@ public:
     // Setters - main operations
     ErrorCheck addPerson(PersonType type, const std::string& firstname, const std::string& lastname, const std::string& address, const int indexNr, const std::string& peselNr, const Sex sexType, const int Salary=0);
     ErrorCheck addPerson(const std::shared_ptr<Person>& completePerson);
-    ErrorCheck checkPeselUnique(const std::string &peselNr, Sex sexType);
-    ErrorCheck checkIdxUnique(const int &indexNr);
-    ErrorCheck checkIdxAndPeselUnique(const int& indexNr,const std::string& peselNr, Sex sexType);
+    virtual ErrorCheck checkPeselUnique(const std::string &peselNr, Sex sexType);
+    virtual ErrorCheck checkIdxUnique(const int &indexNr);
+    virtual ErrorCheck checkIdxAndPeselUnique(const int& indexNr,const std::string& peselNr, Sex sexType);
     bool deleteByIndexNr(const int& indexNr);
     void rebuildIndex(); 
     void eraseDatabase(); // Delete all records and rebuild index
@@ -34,13 +34,13 @@ public:
     void sortByPesel(Order O=Order::Asc);
     void sortBySalary(Order O=Order::Asc);
 
-    bool peselValidator(const std::string& peselNr, Sex sexType);
+    virtual bool peselValidator(const std::string& peselNr, Sex sexType);
     void enablePeselValidation(bool status=true) {peselValidation_=status;};
 
     // Save / load functions
-    bool loadFromFile(const std::string& filename);
+    virtual bool loadFromFile(const std::string& filename);
     bool saveToFile(const std::string& filename);
-    
+
     // Getters
     std::shared_ptr<Person> findPersonByLastName_Linear(const std::string& lastname);
     std::shared_ptr<Person> findPersonByPesel_Linear(const std::string& peselNr);
@@ -54,7 +54,7 @@ public:
     ErrorCheck findPersonAndModifypeselNr(const std::string& peselNr, const std::string& newpeselNr);
     ErrorCheck findPersonAndModifySalary(const std::string& peselNr, const int &newSalary);
 
-    size_t getCount() const {return Records_.size();};
+    virtual size_t getCount() const {return Records_.size();};
     const std::vector<std::shared_ptr<Person>> &getFullList() const { return Records_; };
 
     // c - tor
@@ -62,3 +62,4 @@ public:
     Db(const Db&) = delete; // c - tor deleted
     Db& operator=(const Db&) = delete;
 };
+

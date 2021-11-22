@@ -1,12 +1,28 @@
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <memory>
 #include <vector>
 #include "Db.hpp"
-#include "gtest/gtest.h"
 #include "Generator.hpp"
+using ::testing::Return;
+
+class MockDb : public Db {
+public:
+    MockDb()
+        : Db{false} {};
+    virtual ~MockDb(){};
+    MOCK_METHOD(ErrorCheck, checkIdxAndPeselUnique, (const int& indexNr, const std::string& peselNr, Sex sexType), (override));
+};
 
 struct MainOperations : public ::testing::Test {
     Db dbManager{false};
 };
 
+TEST(MocksOperation, ShouldCallIdxAndPeselValidator) {
+    std::unique_ptr<MockDb> dbmock = std::make_unique<MockDb>();
+    EXPECT_CALL(*dbmock, checkIdxAndPeselUnique).WillOnce(Return(ErrorCheck::OK));
+    dbmock->addPerson(PersonType::Student, "Roman", "Szpicruta", "Durnia 50", 29481, "90121464913", Sex::Male);
+}
 
 TEST_F(MainOperations, ShouldAddNewStudent) {
     EXPECT_EQ(dbManager.getCount(), 0);
@@ -214,7 +230,7 @@ TEST_F(MainOperations, ShouldNotModifyIndexWhenIsDuplicate) {
     if (Person::isTargetClassObject<Person, Student>(dbManager.getFullList().front().get())) {
         EXPECT_EQ((Person::isTargetClassObject<Person, Student>(dbManager.getFullList().front().get()))->getIndexNr(), 29481);
     };
-    }
+}
 
 TEST_F(MainOperations, ShouldNotModifyPeselWhenIsDuplicate) {
     dbManager.addPerson(PersonType::Student, "Roman", "Szpicruta", "Durnia 50", 29481, "90121464913", Sex::Male);
@@ -251,22 +267,20 @@ TEST_F(MainOperations, ShouldFindByPeselAndModifySalary) {
     EXPECT_EQ((Person::isTargetClassObject<Person, Worker>(dbManager.getFullList().back().get()))->getSalary(), 4000);
 }
 
-
 TEST_F(MainOperations, ShouldAddNewStudentFromGenerator) {
     Generator dbGen;
     EXPECT_EQ(dbManager.getCount(), 0);
-    auto validFuncPointer= &Db::peselValidator;
-    dbManager.addPerson(dbGen.generatePerson(&dbManager,validFuncPointer));
+    auto validFuncPointer = &Db::peselValidator;
+    dbManager.addPerson(dbGen.generatePerson(&dbManager, validFuncPointer));
     EXPECT_EQ(dbManager.getCount(), 1);
-} 
+}
 
 TEST_F(MainOperations, ShouldAddNewStudentByAmountFromGenerator) {
     Generator dbGen;
     EXPECT_EQ(dbManager.getCount(), 0);
-    auto validFuncPointer= &Db::peselValidator;
-    for (auto& newGeneratedGuy : dbGen.generatePerson(&dbManager,validFuncPointer,150)) {
+    auto validFuncPointer = &Db::peselValidator;
+    for (auto& newGeneratedGuy : dbGen.generatePerson(&dbManager, validFuncPointer, 150)) {
         EXPECT_EQ(dbManager.addPerson(newGeneratedGuy), ErrorCheck::OK);
     }
     EXPECT_EQ(dbManager.getCount(), 150);
-} 
-
+}

@@ -29,6 +29,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
                  EXCLUDE_FROM_ALL)
 
+
 # The gtest/gtest_main targets carry header search path
 # dependencies automatically when using CMake 2.8.11 or
 # later. Otherwise we have to add them here ourselves.
@@ -68,11 +69,12 @@ enable_testing()
 
 add_library(dbEngineLib STATIC Db.cpp)
 add_library(dbGeneratorLib STATIC Generator.cpp)
-
+link_libraries(gmock)
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} dbEngineLib dbGeneratorLib ${Boost_LIBRARIES})
 
 add_executable(${PROJECT_NAME}-ut test.cpp)
 target_link_libraries(${PROJECT_NAME}-ut dbEngineLib dbGeneratorLib gtest_main)
+
 
 add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
